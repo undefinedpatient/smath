@@ -16,9 +16,9 @@ namespace smath {
 		template<typename... Us> requires (sizeof...(Us)==N && (std::convertible_to<Us, T> && ...))
 		Vec(Us... args):data{static_cast<T>(args)...}{}
 		Vec(const Vec& other) = default;
-		Vec(const Vec&& other) noexcept = default;
+		Vec(Vec&& other) noexcept = default;
 		Vec& operator=(const Vec<N, T>& other) = default;
-		Vec& operator=(const Vec<N, T>&& other) noexcept = default;
+		Vec& operator=(Vec<N, T>&& other) noexcept = default;
 		/* Getters */
 		T& operator[](int i){
 			if (i<0||i>N-1)
@@ -45,65 +45,54 @@ namespace smath {
 			}
 			return result;
 		}
-		friend Vec<N,T> operator+(const Vec<N,T>& a, const Vec<N,T>& b);
-		friend Vec<N,T> operator-(const Vec<N,T>& a, const Vec<N,T>& b);
-		friend Vec<N,T> operator*(const Vec<N,T>& a, const Vec<N,T>& b);
-		friend Vec<N,T> operator*(const Vec<N,T>& a, const T& b);
-		friend Vec<N,T> operator*(const T& a, const Vec<N, T>& b);
-		friend Vec<N,T> operator/(const Vec<N,T>& a, const T& b);
-		friend Vec<N,T> operator%(const Vec<N,T>& a, const T& b);
+		friend Vec<N,T> operator+(const Vec<N,T>& a, const Vec<N,T>& b){
+			Vec<N,T> result = Vec<N,T>();
+			for(unsigned int i = 0; i<N; i++){
+				result[i] = a[i] + b[i];
+			}
+			return result;
+		};
+		friend Vec<N,T> operator-(const Vec<N,T>& a, const Vec<N,T>& b){
+			Vec<N,T> result = Vec<N,T>();
+			for(unsigned int i = 0; i<N; i++){
+				result[i] = a[i] - b[i];
+			}
+			return result;
+		}
+		friend Vec<N,T> operator*(const Vec<N,T>& a, const Vec<N,T>& b){
+    		Vec<N,T> result = Vec<N,T>();
+    		for(unsigned int i = 0; i<N; i++){
+    			result[i] = a[i]*b[(i+1)%N] - a[(i+1)%N]*b[i];
+    		}
+    		return result;
+    	}
+		friend Vec<N,T> operator*(const Vec<N,T>& a, const T& b){
+    		Vec<N,T> result = Vec<N,T>();
+    		for(unsigned int i = 0; i<N; i++){
+    			result[i] = a[i]*b;
+    		}
+    		return result;
+		}
+		friend Vec<N,T> operator*(const T& a, const Vec<N, T>& b){
+    		Vec<N,T> result = Vec<N,T>();
+    		for(unsigned int i = 0; i<N; i++){
+    			result[i] = a*b[i];
+    		}
+    		return result;
+		}
+		friend Vec<N,T> operator/(const Vec<N,T>& a, const T& b){
+    		return a*(1/b);
+		}
+		friend Vec<N,T> operator%(const Vec<N,T>& a, const T& b){
+    		Vec<N,T> result = Vec<N,T>();
+    		for(unsigned int i = 0; i<N; i++){
+    			result[i] = a[i]%b;
+    		}
+    		return result;
+		}
 	};
-	template<unsigned int N, class T>
-	Vec<N,T> operator+(const Vec<N,T>& a, const Vec<N,T>& b){
-		Vec<N,T> result = Vec<N,T>();
-		for(unsigned int i = 0; i<N; i++){
-			result[i] = a[i] + b[i];
-		}
-		return result;
-	}
-	template<unsigned int N, class T>
-	Vec<N,T> operator-(const Vec<N,T>& a, const Vec<N,T>& b){
-		Vec<N,T> result = Vec<N,T>();
-		for(unsigned int i = 0; i<N; i++){
-			result[i] = a[i] - b[i];
-		}
-		return result;
-	}
-	template<unsigned int N, class T>
-	Vec<N,T> operator*(const Vec<N,T>& a, const Vec<N,T>& b){
-		Vec<N,T> result = Vec<N,T>();
-		for(unsigned int i = 0; i<N; i++){
-			result[i] = a[i]*b[(i+1)%N] - a[(i+1)%N]*b[i];
-		}
-		return result;
-	}
-	template<unsigned int N, class T>
-	Vec<N,T> operator*(const Vec<N,T>& a, const T& b){
-		Vec<N,T> result = Vec<N,T>();
-		for(unsigned int i = 0; i<N; i++){
-			result[i] = a[i]*b;
-		}
-		return result;
-	}
-	template<unsigned int N, class T>
-	Vec<N,T> operator*(const T& a, const Vec<N,T>& b){
-		Vec<N,T> result = Vec<N,T>();
-		for(unsigned int i = 0; i<N; i++){
-			result[i] = a*b[i];
-		}
-		return result;
-	}
-	template<unsigned int N, class T>
-	Vec<N,T> operator/(const Vec<N,T>& a, const T& b){
-		return a*(1/b);
-	}
-	template<unsigned int N, class T>
-	Vec<N,T> operator%(const Vec<N,T>& a, const T& b){
-		Vec<N,T> result = Vec<N,T>();
-		for(unsigned int i = 0; i<N; i++){
-			result[i] = a[i]%b;
-		}
-		return result;
-	}
+
+	using Vec3f = Vec<3, float>;
+	using Vec3d = Vec<3, double>;
 }
 #endif //SMATH_VEC3_HPP

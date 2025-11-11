@@ -16,7 +16,7 @@ option(SMATH_BUILD_TESTS "Build the smath Test" ON)
 if(SMATH_BUILD_TESTS)
     add_executable(smath_test
             test/main.cpp
-            test/vec3_test.cpp
+            test/vec_test.cpp
             include/message.hpp
     )
     target_link_libraries(smath_test PRIVATE smath::smath)
