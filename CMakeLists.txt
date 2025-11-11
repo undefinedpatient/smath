@@ -4,7 +4,7 @@ project(smath)
 
 # C++ Standard
 set(CMAKE_CXX_STANDARD 26)
-
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Header only Library
 add_library(smath INTERFACE)
 target_include_directories(smath INTERFACE include)
@@ -17,7 +17,7 @@ if(SMATH_BUILD_TESTS)
     add_executable(smath_test
             test/main.cpp
             test/vec3_test.cpp
-            include/message.h
+            include/message.hpp
     )
     target_link_libraries(smath_test PRIVATE smath::smath)
     enable_testing()

@@ -1,6 +1,5 @@
 #ifndef SMATH_VEC3_HPP
 #define SMATH_VEC3_HPP
-#include <cmath>
 
 namespace smath {
     template<typename T>

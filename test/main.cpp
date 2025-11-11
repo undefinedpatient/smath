@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "message.h"
+#include "message.hpp"
 #include "smath/smath.hpp"
 
 void test_vec3();

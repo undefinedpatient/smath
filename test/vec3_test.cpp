@@ -2,7 +2,7 @@
 #include <smath/smath.hpp>
 #include <iomanip>
 
-#include "message.h"
+#include "message.hpp"
 
 void test_vec3() {
     using namespace smath;
