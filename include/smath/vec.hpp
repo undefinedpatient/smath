@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <concepts>
+#include <ostream>
 #include <stdexcept>
 
 namespace smath {
@@ -30,6 +31,16 @@ namespace smath {
 				throw std::out_of_range("Index out of bound");
 			return data[i];
 		}
+		std::string toString() const {
+			std::string str = "Vec" + std::to_string(N) + "<";
+			for (unsigned int i = 0; i < N; i++){
+				str += std::to_string(data[i]);
+				if (i!=N-1)
+					str += ", ";
+			}
+			str += ">";
+			return str;
+		}
 		/* Operations */
 		T length() const {
 			T len = 0;
@@ -45,6 +56,7 @@ namespace smath {
 			}
 			return result;
 		}
+
 		friend Vec<N,T> operator+(const Vec<N,T>& a, const Vec<N,T>& b){
 			Vec<N,T> result = Vec<N,T>();
 			for(unsigned int i = 0; i<N; i++){
@@ -89,6 +101,27 @@ namespace smath {
     			result[i] = a[i]%b;
     		}
     		return result;
+		}
+		friend bool operator==(const Vec<N, T>& a, const Vec<N,T>& b){
+			for(unsigned int i = 0; i<N; i++){
+				if (a[i]!=b[i]) return false;
+			}
+			return true;
+		}
+		friend bool operator!=(const Vec<N, T>& a, const Vec<N, T>& b){
+			return !(a==b);
+		}
+		friend std::ostream& operator<<(std::ostream& o, const Vec<N,T>& vec){
+			o << "Vec" << N << "<";
+			for (int i = 0; i<N; i++){
+				o << vec[i];
+				if (i!=N-1){
+					o<<", ";
+				}
+			}
+			o << ">";
+			return o;
+			
 		}
 	};
 
