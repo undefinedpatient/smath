@@ -22,7 +22,7 @@ if(SMATH_BUILD_TESTS)
           test/test_tool.hpp
         )
         target_link_libraries(${TEST_NAME} PRIVATE smath::smath)
-        add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
+        add_test(NAME ${TEST_NAME}_unit COMMAND ${TEST_NAME})
     enable_testing()
     endforeach()
 endif()
