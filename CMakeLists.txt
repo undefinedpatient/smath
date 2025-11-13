@@ -14,12 +14,15 @@ add_library(smath::smath ALIAS smath)
 option(SMATH_BUILD_TESTS "Build the smath Test" ON)
 
 if(SMATH_BUILD_TESTS)
-    add_executable(smath_test
-            test/main.cpp
-            test/vec_test.cpp
-            include/message.hpp
-    )
-    target_link_libraries(smath_test PRIVATE smath::smath)
+    file(GLOB TEST_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "test/*test.cpp")
+    foreach(TEST_SOURCE ${TEST_SOURCES})
+        get_filename_component(TEST_NAME ${TEST_SOURCE} NAME_WE)
+        add_executable(${TEST_NAME}
+          ${TEST_SOURCE}
+          test/test_tool.hpp
+        )
+        target_link_libraries(${TEST_NAME} PRIVATE smath::smath)
+        add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
     enable_testing()
-    add_test(NAME smath_basic_test COMMAND smath_test)
+    endforeach()
 endif()

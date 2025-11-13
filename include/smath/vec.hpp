@@ -49,7 +49,7 @@ namespace smath {
 			}
 			return static_cast<T>(std::sqrt(len));
 		}
-		Vec<N,T> dot(const Vec<N, T>& other) const {
+		T dot(const Vec<N, T>& other) const {
 			T result = 0;
 			for (int i = 0; i<N; i++) {
 				result+=(*this)[i]*other[i];
