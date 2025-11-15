@@ -14,8 +14,13 @@ namespace smath {
 	public:
 		/* Constructors */
 		Vec():data{}{};
-		template<typename... Us> requires (sizeof...(Us)==N && (std::convertible_to<Us, T> && ...))
+		template<class... Us> requires (sizeof...(Us)==N && (std::convertible_to<Us, T> && ...))
 		Vec(Us... args):data{static_cast<T>(args)...}{}
+		Vec(T* arr){
+			for(unsigned int i = 0; i<N; i++){
+				this->data[i] = arr[i];
+			}
+		}
 		Vec(const Vec& other) = default;
 		Vec(Vec&& other) noexcept = default;
 		Vec& operator=(const Vec<N, T>& other) = default;
