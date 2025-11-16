@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <smath/smath.hpp>
 
 #define TEST(test_name) \
     void test_body_##test_name();\
@@ -15,8 +16,14 @@
     }();\
     void test_body_##test_name()
 
-#define assert_equal(value, expected) assert_equal_impl(value, expected, #value)
-#define assert_close(value, expected, threshold) assert_close_impl(value, expected, threshold, #value)
+#define assert_equal(value, expected) \
+    assert_equal_impl(value, expected, #value)
+
+// #define assert_equal_mat(value, expected) \
+//     assert_equal_mat_impl(value, expected, #value)
+
+#define assert_close(value, expected, threshold) \
+    assert_close_impl(value, expected, threshold, #value)
 
 constexpr int MESSAGE_WIDTH = 64;
 constexpr const char* passed_message = "\033[1;32m[PASSED]\033[0m";
@@ -34,19 +41,20 @@ static void print_message(const char& deco, const std::string &message) {
 }
 class TestRunner{
     private:
-        std::vector<TestCase> testCases = {};
+        std::vector<TestCase> test_cases = {};
     public:
         static TestRunner& instance() {
             static TestRunner instance;
             return instance;
         }
         void add_test(const TestCase& test_case) {
-            testCases.push_back(test_case);
+            test_cases.push_back(test_case);
         }
         int run(const char* test_name){
             print_message('=', test_name);
             int num_failed = 0;
-            for(const TestCase& test: this->testCases){
+            for(const TestCase& test: this->test_cases){
+                print_message('-', test.name);
                 try {
                     test.body();
                 }
@@ -57,7 +65,7 @@ class TestRunner{
                     num_failed++;
                 }
             }
-            print_message('=', std::to_string(testCases.size()-num_failed) + "/" + std::to_string(this->testCases.size()) + " Test Passed");
+            print_message('=', std::to_string(test_cases.size()-num_failed) + "/" + std::to_string(this->test_cases.size()) + " Test Passed");
             return num_failed ? EXIT_FAILURE : EXIT_SUCCESS;
         }
 
@@ -65,26 +73,49 @@ class TestRunner{
 
 template<class T>
 static void assert_equal_impl(const T& value, const T& expected, const char* valueString){
-    std::cout<<"Test Type: Assert Equal \nEvaluate: "<<valueString<<"\nGet: "<< value <<"\nExpected: " << expected << "\n";
-    if (value!=expected){
+    // PASSED
+    if (value==expected){
+        std::cout<<"Test Type: Assert Equal \nEvaluate: "<<valueString<<"\n";
+        std::cout<<passed_message<<"\n";
+    }
+    // FAILED
+    else if (value!=expected){
+        std::cout<<"Test Type: Assert Equal \nEvaluate: "<<valueString<<"\nGet:\n"<< value <<"\nExpected:\n" << expected << "\n";
         std::cout<<failed_message<<"\n";
     }
-    else
-        std::cout<<passed_message<<"\n";
     std::cout<<std::endl;
-    
 }
+
+// template<unsigned int M, unsigned int N, class T>
+// void assert_equal_mat_impl(const smath::Mat<M,N,T>& value, const smath::Mat<M,N,T>& expected, const char* valueString){
+//     // PASSED
+//     if (value==expected){
+//         std::cout<<"Test Type: Assert Equal (Matrix) \nEvaluate: "<<valueString<<"\n";
+//         std::cout<<passed_message<<"\n";
+//     }
+//     // FAILED
+//     else if (value!=expected){
+//         std::cout<<"Test Type: Assert Equal \nEvaluate: "<<valueString<<"\nGet:\n"<< value <<"\nExpected:\n" << expected << "\n";
+//         std::cout<<failed_message<<"\n";
+//     }
+//     std::cout<<std::endl;
+// }
 
 template<class T>
 static void assert_close_impl(const T& value, const T& expected, const T& threshold, const char* valueString){
-    std::cout<<"Test Type: Assert Close \nEvaluate: "<<valueString<<"\n";
-    std::cout<<"Get: "<< value <<"\n";
-    std::cout<<"Expected: " << expected - threshold << " < " <<expected << " < " << expected + threshold << "\n";
+    // FAILED
     if (value>expected+threshold||value<expected-threshold){
+        std::cout<<"Test Type: Assert Close \nEvaluate: "<<valueString<<"\n";
+        std::cout<<"Get:\n"<< value <<"\n";
+        std::cout<<"Expected:\n" << expected - threshold << " < " <<expected << " < " << expected + threshold << "\n";
         std::cout<<failed_message<<"\n";
     }
-    else
+    // PASSED
+    else{
+        std::cout<<"Test Type: Assert Close \nEvaluate: "<<valueString<<"\n";
         std::cout<<passed_message<<"\n";
+        
+    }
     std::cout<<std::endl;
     
 }

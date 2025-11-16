@@ -1,5 +1,4 @@
 #include <smath/smath.hpp>
-#include "smath/vec.hpp"
 #include "test_tool.hpp"
 
 using namespace smath;
