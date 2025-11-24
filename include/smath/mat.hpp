@@ -1,8 +1,7 @@
 #ifndef SMATH_MAT_HPP
 #define SMATH_MAT_HPP
 
-#include "smath/vec.hpp"
-#include <cmath>
+#include <smath/vec.hpp>
 #include <concepts>
 #include <iostream>
 #include <ostream>
@@ -18,7 +17,7 @@ namespace smath{
     	[r0,r0,r0,r1,r1,r1,r2,r2,r2]
   	*/
 	template<unsigned int M, unsigned int N, class T>
-	requires (std::is_arithmetic<T>::value)
+	requires (std::is_arithmetic<T>::value && M<64 && N<64)
 	class Mat{
 		private:
 			T data[M*N]{};
@@ -32,15 +31,15 @@ namespace smath{
 					}
 				}
 			}
-			template<unsigned int S, class K> requires (std::convertible_to<float, K>)
-			static Mat<S,S,K> identity() {
-				Mat<S,S,K> i = {};
+			static Mat<M,M,T> identity() {
+				Mat<M,M,T> i = {};
 				for(unsigned int n=0; n<N; n++){
 					for(unsigned int m=0; m<M; m++){
 						if(n==m)
-						i.data[n*M+m] = static_cast<K>(1.0f);
+						i.data[n*M+m] = static_cast<T>(1.0f);
 					}
 				}
+				return i;
 			}
 			template<class... Us> requires ((sizeof...(Us)==M*N) && (std::convertible_to<Us, T> && ...))
 			Mat(Us... args):data{static_cast<T>(args)...}{}
@@ -87,16 +86,16 @@ namespace smath{
 			/**
 			 * @return An array of length N, consists of Vec<M,T>.
 			 */
-			Vec<M, T>* toVectors() const {
-				Vec<M, T> vec[M];
+			std::array<Vec<M, T>,N> toVectors() const {
+				std::array<Vec<M, T>, N> vec;
 				for(unsigned int n=0; n<N; n++){
 					T temp_data[M];
 					for(unsigned int m=0; m<M; m++){
 						temp_data[m] = this->data[M*n+m];
 					}
-					vec[n] = Vec<M, T>(&temp_data);
+					vec[n] = Vec<M, T>(temp_data);
 				}
-				return &vec;
+				return vec;
 			}
 			/**
 			 * @return A new transposed version of matrix;

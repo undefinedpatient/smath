@@ -25,7 +25,7 @@
 #define assert_close(value, expected, threshold) \
     assert_close_impl(value, expected, threshold, #value)
 
-constexpr int MESSAGE_WIDTH = 64;
+constexpr int MESSAGE_WIDTH = 36;
 constexpr const char* passed_message = "\033[1;32m[PASSED]\033[0m";
 constexpr const char* failed_message = "\033[1;31m[FAILED]\033[0m";
 
@@ -75,7 +75,7 @@ template<class T>
 static void assert_equal_impl(const T& value, const T& expected, const char* valueString){
     // PASSED
     if (value==expected){
-        std::cout<<"Test Type: Assert Equal \nEvaluate: "<<valueString<<"\n";
+        std::cout<<"Test Type: Assert Equal | Evaluate: "<<valueString<<"\n";
         std::cout<<passed_message<<"\n";
     }
     // FAILED
@@ -86,20 +86,6 @@ static void assert_equal_impl(const T& value, const T& expected, const char* val
     std::cout<<std::endl;
 }
 
-// template<unsigned int M, unsigned int N, class T>
-// void assert_equal_mat_impl(const smath::Mat<M,N,T>& value, const smath::Mat<M,N,T>& expected, const char* valueString){
-//     // PASSED
-//     if (value==expected){
-//         std::cout<<"Test Type: Assert Equal (Matrix) \nEvaluate: "<<valueString<<"\n";
-//         std::cout<<passed_message<<"\n";
-//     }
-//     // FAILED
-//     else if (value!=expected){
-//         std::cout<<"Test Type: Assert Equal \nEvaluate: "<<valueString<<"\nGet:\n"<< value <<"\nExpected:\n" << expected << "\n";
-//         std::cout<<failed_message<<"\n";
-//     }
-//     std::cout<<std::endl;
-// }
 
 template<class T>
 static void assert_close_impl(const T& value, const T& expected, const T& threshold, const char* valueString){
@@ -112,7 +98,7 @@ static void assert_close_impl(const T& value, const T& expected, const T& thresh
     }
     // PASSED
     else{
-        std::cout<<"Test Type: Assert Close \nEvaluate: "<<valueString<<"\n";
+        std::cout<<"Test Type: Assert Close | Evaluate: "<<valueString<<"\n";
         std::cout<<passed_message<<"\n";
         
     }

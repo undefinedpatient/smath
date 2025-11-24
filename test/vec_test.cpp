@@ -3,6 +3,7 @@
 
 using namespace smath;
 
+
 TEST(LENGTH_TEST_0){
     assert_equal(Vec3f(0, 0, 0).length(), 0.0f);
 };

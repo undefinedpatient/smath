@@ -1,5 +1,5 @@
 #include <smath/smath.hpp>
-#include "smath/mat.hpp"
+#include "smath/vec.hpp"
 #include "test_tool.hpp"
 
 using namespace smath;
@@ -110,6 +110,35 @@ TEST(MULTIPLICATION_TEST){
         mat10*mat11,
         r1
     );
+    auto mat20 = Mat2f(1,2,3,4);
+    auto mat21 = Mat2f::identity();
+    auto r2 = mat20;
+    assert_equal(mat20*mat21, r2);
+    auto mat30 = Mat3f(
+        3,2,-6,
+        7,8,1,
+        1,0,-2
+    );
+    auto mat31 = Mat3f(
+        1,-1,7,
+        0,0,-2,
+        5,1,2
+    );
+    auto r3 = Mat3f(
+        3,-6,-21,
+        -2,0,4,
+        24,18,-33
+    );
+    assert_equal(mat30*mat31,r3);
+}
+TEST(MAT_TO_VEC_TEST){
+    auto mat00 = Mat3f(1,2,3,
+                       4,5,6,
+                       7,8,9);
+    auto vec00 = mat00.toVectors()[0];
+    auto r00 = Vec3f(1,2,3);
+    std::cout<<vec00<<std::endl;
+    // assert_equal(vec00,r00);
 }
 int main(){
     return TestRunner::instance().run("Mat Test");

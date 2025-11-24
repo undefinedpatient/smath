@@ -2,6 +2,7 @@
 #define SMATH_SMATH_H
 
 #include "smath/vec.hpp"
+#include "smath/basic.hpp"
 #include "smath/mat.hpp"
 
 #endif //SMATH_SMATH_H

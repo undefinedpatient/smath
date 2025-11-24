@@ -5,9 +5,11 @@
 #include <concepts>
 #include <ostream>
 #include <stdexcept>
+#include <type_traits>
 
 namespace smath {
 	template<unsigned int N, class T>
+	requires (std::is_arithmetic<T>::value && N<64)
 	class Vec{
 	private:
 		T data[N];
@@ -16,7 +18,7 @@ namespace smath {
 		Vec():data{}{};
 		template<class... Us> requires (sizeof...(Us)==N && (std::convertible_to<Us, T> && ...))
 		Vec(Us... args):data{static_cast<T>(args)...}{}
-		Vec(T* arr){
+		explicit Vec(const T* arr){
 			for(unsigned int i = 0; i<N; i++){
 				this->data[i] = arr[i];
 			}
