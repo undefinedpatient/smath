@@ -23,10 +23,15 @@ namespace smath {
 				this->data[i] = arr[i];
 			}
 		}
+		// Copy constructor
 		Vec(const Vec& other) = default;
+		// Move consturctor
 		Vec(Vec&& other) noexcept = default;
+		// Copy assignment
 		Vec& operator=(const Vec<N, T>& other) = default;
+		// Move assignment
 		Vec& operator=(Vec<N, T>&& other) noexcept = default;
+
 		/* Getters */
 		T& operator[](int i){
 			if (i<0||i>N-1)

@@ -43,12 +43,16 @@ namespace smath{
 			}
 			template<class... Us> requires ((sizeof...(Us)==M*N) && (std::convertible_to<Us, T> && ...))
 			Mat(Us... args):data{static_cast<T>(args)...}{}
+			// Copy constructor
 			Mat(const Mat& other) = default;
+			// Move constructor
 			Mat(Mat&& other) noexcept = default;
+			// Copy assignment
 			Mat<M,N,T>& operator=(const Mat<M, N, T>& other) = default;
+			// Move assignment
 			Mat<M,N,T>& operator=(Mat<M, N, T>&& other) noexcept = default;
-			/* Getters */
 
+			/* Getters */
 			/**
 			 * @brief Get the column of the matrix by index.
 			 * @param index of type unsigned int.

@@ -2,6 +2,4 @@
 #define SMATH_BASIC_HPP
 
 
-
-
 #endif
