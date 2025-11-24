@@ -1,5 +1,4 @@
 #include <smath/smath.hpp>
-#include "smath/vec.hpp"
 #include "test_tool.hpp"
 
 using namespace smath;
@@ -13,9 +12,24 @@ TEST(TRANSPOSE_TEST){
 }
 TEST(DETERMINANT_TEST){
     assert_equal(Mat2f(0,0,0,0).determinant(),0.0f);
-    assert_equal(Mat2f(1,0,0,1).determinant(),1.0f); 
+    assert_equal(Mat2f(1,0,0,1).determinant(),1.0f);
+    assert_equal(Mat2f(1,2,3,4).determinant(),-2.0f);
 }
 TEST(SUBMATRIX_TEST){
+    assert_equal(
+        Mat2f(
+            1,2,
+            3,4
+        ).subMatrixAt(0, 0),
+        Mat1f(4)
+    );
+    assert_equal(
+        Mat2f(
+            1,2,
+            3,4
+        ).subMatrixAt(1, 1),
+        Mat1f(1)
+    );
     assert_equal(
         Mat3f(
             0,1,2,
@@ -146,6 +160,19 @@ TEST(MAT_TO_VEC_TEST){
     assert_equal(mat01.toVectors()[0], Vec3f(1,2,3));
     assert_equal(mat01.toVectors()[1], Vec3f(4,5,6));
 }
+
+TEST(INVERSION_TEST){
+    auto mat00 = Mat2f(
+        1.0f,2.0f,
+        3.0f,4.0f
+    );
+    auto r00 = Mat2f(
+        -2.0f,1.0f,
+        1.5f,-0.5f
+    );
+    assert_equal(mat00.inverse(),r00);
+};
+
 int main(){
     return TestRunner::instance().run("Mat Test");
 }

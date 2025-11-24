@@ -9,7 +9,7 @@
 
 namespace smath {
 	template<unsigned int N, class T>
-	requires (std::is_arithmetic<T>::value && N<64)
+	requires (std::is_arithmetic<T>::value && N<32)
 	class Vec{
 	private:
 		T data[N];

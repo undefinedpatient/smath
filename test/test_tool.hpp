@@ -19,9 +19,6 @@
 #define assert_equal(value, expected) \
     assert_equal_impl(value, expected, #value)
 
-// #define assert_equal_mat(value, expected) \
-//     assert_equal_mat_impl(value, expected, #value)
-
 #define assert_close(value, expected, threshold) \
     assert_close_impl(value, expected, threshold, #value)
 
@@ -75,12 +72,12 @@ template<class T>
 static void assert_equal_impl(const T& value, const T& expected, const char* valueString){
     // PASSED
     if (value==expected){
-        std::cout<<"Test Type: Assert Equal | Evaluate: "<<valueString<<"\n";
+        std::cout<<"Test: Assert Equal | Evaluate: "<<valueString<<"\n";
         std::cout<<passed_message<<"\n";
     }
     // FAILED
     else if (value!=expected){
-        std::cout<<"Test Type: Assert Equal \nEvaluate: "<<valueString<<"\nGet:\n"<< value <<"\nExpected:\n" << expected << "\n";
+        std::cout<<"Test: Assert Equal \nEvaluate: "<<valueString<<"\nGet:\n"<< value <<"\nExpected:\n" << expected << "\n";
         std::cout<<failed_message<<"\n";
     }
     std::cout<<std::endl;
@@ -91,14 +88,14 @@ template<class T>
 static void assert_close_impl(const T& value, const T& expected, const T& threshold, const char* valueString){
     // FAILED
     if (value>expected+threshold||value<expected-threshold){
-        std::cout<<"Test Type: Assert Close \nEvaluate: "<<valueString<<"\n";
+        std::cout<<"Test: Assert Close \nEvaluate: "<<valueString<<"\n";
         std::cout<<"Get:\n"<< value <<"\n";
         std::cout<<"Expected:\n" << expected - threshold << " < " <<expected << " < " << expected + threshold << "\n";
         std::cout<<failed_message<<"\n";
     }
     // PASSED
     else{
-        std::cout<<"Test Type: Assert Close | Evaluate: "<<valueString<<"\n";
+        std::cout<<"Test: Assert Close | Evaluate: "<<valueString<<"\n";
         std::cout<<passed_message<<"\n";
         
     }

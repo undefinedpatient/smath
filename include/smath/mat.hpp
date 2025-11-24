@@ -17,7 +17,7 @@ namespace smath{
     	[r0,r0,r0,r1,r1,r1,r2,r2,r2]
   	*/
 	template<unsigned int M, unsigned int N, class T>
-	requires (std::is_arithmetic<T>::value && M<64 && N<64)
+	requires (std::is_arithmetic<T>::value && M<32 && N<32)
 	class Mat{
 		private:
 			T data[M*N]{};
@@ -102,7 +102,7 @@ namespace smath{
 				return vec;
 			}
 			/**
-			 * @return A new transposed version of matrix;
+			 * @return A new transposed version of matrix.
 			 */
 			Mat<M, N, T> transpose() const {
 				Mat<M, N, T> copy = (*this);
@@ -112,6 +112,26 @@ namespace smath{
 					}
 				}
 				return copy;
+			}
+			/**
+			 * @return A new adjoint version of matrix.
+			 */
+			Mat<M,N,T> adjoint() const {
+				Mat<M,N,T> cofactor{};
+				
+				for(unsigned int n=0; n<N; n++){
+					for(unsigned int m=0; m<M; m++){
+						const int sign = ((n+m)%2)?-1:1;
+						cofactor[M*n+m] = sign*this->subMatrixAt(n, m).determinant();
+					}
+				}
+				return cofactor.transpose();
+			}
+			/**
+			 * @return A new inverse version of matrix.
+			 */
+			Mat<M,N,T> inverse() const{
+				return (1/determinant())*adjoint();
 			}
 			/**
 			 * @return Sub-matrix without the column c and row r.
