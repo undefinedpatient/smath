@@ -1,8 +1,10 @@
 #ifndef SMATH_TEST_TOOL_HPP
 #define SMATH_TEST_TOOL_HPP
+#include <chrono>
 #include <cstdlib>
 #include <exception>
 #include <iostream>
+#include <ratio>
 #include <string>
 #include <vector>
 #include <smath/smath.hpp>
@@ -22,20 +24,39 @@
 #define assert_close(value, expected, threshold) \
     assert_close_impl(value, expected, threshold, #value)
 
-constexpr int MESSAGE_WIDTH = 36;
+constexpr int MESSAGE_WIDTH = 42;
 constexpr const char* passed_message = "\033[1;32m[PASSED]\033[0m";
 constexpr const char* failed_message = "\033[1;31m[FAILED]\033[0m";
 
-struct TestCase {
-    const char* name;
-    void (*body)();
-};
 static void print_message(const char& deco, const std::string &message) {
     const int pad = (MESSAGE_WIDTH - static_cast<int>(message.length()))/2;
     std::cout << "\033[1m+" << std::string(pad, deco) << " ";
     std::cout << message << " ";
     std::cout << std::string(pad, deco) << "+\033[0m" << std::endl;
 }
+struct TestCase {
+    const char* name;
+    void (*body)();
+};
+class Timer {
+    private:
+        std::chrono::time_point<std::chrono::system_clock> start_time;
+        std::chrono::time_point<std::chrono::system_clock> stop_time;
+    public:
+        Timer() = default;
+        void start(){
+            start_time = std::chrono::high_resolution_clock::now();
+        }
+        void stop(){
+            stop_time = std::chrono::high_resolution_clock::now();
+        }
+        const long get_duration() const {
+            auto start_in_milli = std::chrono::time_point_cast<std::chrono::microseconds>(start_time).time_since_epoch().count();
+            auto end_in_milli = std::chrono::time_point_cast<std::chrono::microseconds>(stop_time).time_since_epoch().count();
+            long duration = end_in_milli-start_in_milli;
+            return duration;
+        }
+};
 class TestRunner{
     private:
         std::vector<TestCase> test_cases = {};
@@ -50,10 +71,15 @@ class TestRunner{
         int run(const char* test_name){
             print_message('=', test_name);
             int num_failed = 0;
+            long time_count = 0;
             for(const TestCase& test: this->test_cases){
                 print_message('-', test.name);
+                Timer timer{};
                 try {
+                    timer.start();
                     test.body();
+                    timer.stop();
+                    time_count += timer.get_duration();
                 }
                 catch (const std::exception& e){
                     num_failed++;
@@ -62,7 +88,13 @@ class TestRunner{
                     num_failed++;
                 }
             }
-            print_message('=', std::to_string(test_cases.size()-num_failed) + "/" + std::to_string(this->test_cases.size()) + " Test Passed");
+            print_message('=',
+                std::to_string(test_cases.size()-num_failed) +
+                "/" +
+                std::to_string(this->test_cases.size()) +
+                " Passed | " +
+                std::to_string(time_count) +
+                " \u00B5s ");
             return num_failed ? EXIT_FAILURE : EXIT_SUCCESS;
         }
 
