@@ -70,28 +70,25 @@ namespace smath {
 		}
 
 		friend Vec<N,T> operator+(const Vec<N,T>& a, const Vec<N,T>& b){
-			Vec<N,T> result = Vec<N,T>();
+			Vec<N,T> result{};
 			for(unsigned int i = 0; i<N; i++){
 				result[i] = a[i] + b[i];
 			}
 			return result;
 		};
 		friend Vec<N,T> operator-(const Vec<N,T>& a, const Vec<N,T>& b){
-			Vec<N,T> result = Vec<N,T>();
+			Vec<N,T> result{};
 			for(unsigned int i = 0; i<N; i++){
 				result[i] = a[i] - b[i];
 			}
 			return result;
 		}
-		friend Vec<N,T> operator*(const Vec<N,T>& a, const Vec<N,T>& b){
-    		Vec<N,T> result = Vec<N,T>();
-    		for(unsigned int i = 0; i<N; i++){
-    			result[i] = a[i]*b[(i+1)%N] - a[(i+1)%N]*b[i];
-    		}
-    		return result;
+
+		friend Vec<3,T> operator*(const Vec<3,T>& a, const Vec<3,T>& b){
+    		return Vec<3,T>{a[1]*b[2]-a[2]*b[1],-a[0]*b[2]+a[2]*b[0],a[0]*b[1]-a[1]*b[0]};
     	}
 		friend Vec<N,T> operator*(const Vec<N,T>& a, const T& b){
-    		Vec<N,T> result = Vec<N,T>();
+    		Vec<N,T> result{};
     		for(unsigned int i = 0; i<N; i++){
     			result[i] = a[i]*b;
     		}
