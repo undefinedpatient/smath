@@ -149,6 +149,7 @@ TEST(MAT_TO_VEC_TEST){
     auto mat00 = Mat3f(1,2,3,
                        4,5,6,
                        7,8,9);
+    auto r00 =  mat00.toVectors()[0] == Vec3f(1,2,3);
     assert_equal(mat00.toVectors()[0], Vec3f(1,2,3));
     assert_equal(mat00.toVectors()[1], Vec3f(4,5,6));
     assert_equal(mat00.toVectors()[2], Vec3f(7,8,9));

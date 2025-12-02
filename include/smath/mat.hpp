@@ -17,7 +17,7 @@ namespace smath{
     	[r0,r0,r0,r1,r1,r1,r2,r2,r2]
   	*/
 	template<unsigned int M, unsigned int N, class T>
-	requires (std::is_arithmetic<T>::value && M<32 && N<32)
+	requires (std::is_arithmetic<T>::value && M<16 && N<16)
 	class Mat{
 		private:
 			T data[M*N]{};

@@ -9,7 +9,7 @@
 
 namespace smath {
 	template<unsigned int N, class T>
-	requires (std::is_arithmetic<T>::value && N<32)
+	requires ((std::is_arithmetic_v<T> || std::is_integral_v<T>)&& N<16)
 	class Vec{
 	private:
 		T data[N];
@@ -68,7 +68,12 @@ namespace smath {
 			}
 			return result;
 		}
-
+		operator bool() const {
+			for(unsigned int i = 0; i<N; i++){
+				if(!this->data[i])return false;
+			}
+			return true;
+		}
 		friend Vec<N,T> operator+(const Vec<N,T>& a, const Vec<N,T>& b){
 			Vec<N,T> result{};
 			for(unsigned int i = 0; i<N; i++){
@@ -80,6 +85,13 @@ namespace smath {
 			Vec<N,T> result{};
 			for(unsigned int i = 0; i<N; i++){
 				result[i] = a[i] - b[i];
+			}
+			return result;
+		}
+		friend Vec<N,T> operator-(const Vec<N,T>& a){
+			Vec<N,T> result{};
+			for(unsigned int i = 0; i<N; i++){
+				result[i] = -a[i];
 			}
 			return result;
 		}
@@ -95,7 +107,7 @@ namespace smath {
     		return result;
 		}
 		friend Vec<N,T> operator*(const T& a, const Vec<N, T>& b){
-    		Vec<N,T> result = Vec<N,T>();
+    		Vec<N,T> result{};
     		for(unsigned int i = 0; i<N; i++){
     			result[i] = a*b[i];
     		}
@@ -105,20 +117,32 @@ namespace smath {
     		return a*(1/b);
 		}
 		friend Vec<N,T> operator%(const Vec<N,T>& a, const T& b){
-    		Vec<N,T> result = Vec<N,T>();
+    		Vec<N,T> result{};
     		for(unsigned int i = 0; i<N; i++){
     			result[i] = a[i]%b;
     		}
     		return result;
 		}
-		friend bool operator==(const Vec<N, T>& a, const Vec<N,T>& b){
+		friend Vec<N,bool> operator==(const Vec<N, T>& a, const Vec<N,T>& b){
+    		Vec<N,bool> result{};
 			for(unsigned int i = 0; i<N; i++){
-				if (a[i]!=b[i]) return false;
+				result[i] = (a[i]==b[i])?true:false;
 			}
-			return true;
+			return result;
 		}
-		friend bool operator!=(const Vec<N, T>& a, const Vec<N, T>& b){
-			return !(a==b);
+		friend Vec<N,bool> operator!=(const Vec<N, T>& a, const Vec<N, T>& b){
+    		Vec<N,bool> result{};
+			for(unsigned int i = 0; i<N; i++){
+				result[i] = (a[i]!=b[i])?true:false;
+			}
+			return result;
+		}
+		friend bool operator!(const Vec<N,T>& a) {
+    		Vec<N,bool> result{};
+			for(unsigned int i = 0; i<N; i++){
+				result[i] = (a[i])?true:false;
+			}
+			return result;
 		}
 		friend std::ostream& operator<<(std::ostream& o, const Vec<N,T>& vec){
 			o << "Vec" << N << "<";
