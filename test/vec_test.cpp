@@ -18,7 +18,6 @@ TEST(ARITHMETHIC_TEST){
     assert_equal(Vec3f(1.0f,4.0f,-5.0f)*2.0f,Vec3f(2.0f,8.0f,-10.0f));
 
     assert_equal(Vec3f(1.0f,2.0f,3.0f)*Vec3f(-1.0f,2.0f,0.0f),Vec3f(-6,-3,4));
-    std::cout<<(!true)<<std::endl;
 }
 int main(){
     return TestRunner::instance().run("Length Test");

@@ -7,6 +7,7 @@
 #include <ostream>
 #include <stdexcept>
 #include <string>
+#include <cmath>
 #include <type_traits>
 
 namespace smath{
@@ -22,7 +23,9 @@ namespace smath{
 		private:
 			T data[M*N]{};
 		public:
-			/* Constructors */
+			/***************************************
+				Constructors
+			****************************************/
 			Mat():data{}{}
 			Mat(T value){
 				for(unsigned int n=0; n<N; n++){
@@ -52,7 +55,10 @@ namespace smath{
 			// Move assignment
 			Mat<M,N,T>& operator=(Mat<M, N, T>&& other) noexcept = default;
 
-			/* Getters */
+			/***************************************
+				Getters
+			****************************************/
+
 			/**
 			 * @brief Get the column of the matrix by index.
 			 * @param index of type unsigned int.
@@ -85,7 +91,9 @@ namespace smath{
 				}
 				return str;
 			}
-			/* Operations */
+			/***************************************
+				Operations
+			****************************************/
 
 			/**
 			 * @return An array of length N, consists of Vec<M,T>.
@@ -196,6 +204,23 @@ namespace smath{
 					return sum;
 				}
 			}
+
+			/**
+			 * @brief 
+			 * @return
+			 */
+			Mat<M,N,T> translate(Vec<N,T> vec) const {
+				return (*this)*vec;
+			}
+			/**
+			 * @brief 
+			 * @return
+			 */
+			Mat<2,2,T> rotate(T radian) const {
+				return (*this)*Mat<2,2,T>(std::cos(radian), std::sin(radian), -std::sin(radian), std::cos(radian));
+			}
+
+
 			friend Mat<M,N,T> operator+(const Mat<M,N,T>& a, const Mat<M,N,T>& b){
 				Mat<M,N,T> result = Mat<M,N,T>();
 				for(unsigned int n = 0; n<N; n++){
@@ -221,11 +246,9 @@ namespace smath{
 					for(unsigned int m=0; m<M; m++){
 						T temp = 0;
 						for(unsigned int n=0; n<N; n++){
-							// std::cout<< a[n*M+m]*b[k*N+n] << " + ";
 							temp += a[n*M+m]*b[k*N+n];
 						}
 						result[k*M+m] = temp;
-						// std::cout<<" = "<<temp<<" "<<std::endl;
 					}
 				}
 				

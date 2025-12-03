@@ -14,7 +14,9 @@ namespace smath {
 	private:
 		T data[N];
 	public:
-		/* Constructors */
+		/***************************************
+			Constructors
+		****************************************/
 		Vec():data{}{};
 		template<class... Us> requires (sizeof...(Us)==N && (std::convertible_to<Us, T> && ...))
 		Vec(Us... args):data{static_cast<T>(args)...}{}
@@ -32,17 +34,33 @@ namespace smath {
 		// Move assignment
 		Vec& operator=(Vec<N, T>&& other) noexcept = default;
 
-		/* Getters */
+		/***************************************
+			Getters
+		****************************************/
+
+		/**
+		 * @brief Operator Overloading for accessing data array size of N
+		 * @param i zero-based index
+		 * @return data[i]
+		 */
 		T& operator[](int i){
 			if (i<0||i>N-1)
 				throw std::out_of_range("Index out of bound");
 			return data[i];
 		}
+		/**
+		 * @brief Operator Overloading for accessing data array size of N
+		 * @param i zero-based index
+		 * @return data[i]
+		 */
 		const T& operator[](int i) const {
 			if (i<0||i>N-1)
 				throw std::out_of_range("Index out of bound");
 			return data[i];
 		}
+		/**
+		 * @return String representation of vector
+		 */
 		std::string toString() const {
 			std::string str = "Vec" + std::to_string(N) + "<";
 			for (unsigned int i = 0; i < N; i++){
@@ -53,7 +71,14 @@ namespace smath {
 			str += ">";
 			return str;
 		}
-		/* Operations */
+		
+		/***************************************
+			Operations
+		****************************************/
+
+		/**
+		 * @return length of the vector
+		 */
 		T length() const {
 			T len = 0;
 			for (int i = 0; i<N; i++){
@@ -61,6 +86,9 @@ namespace smath {
 			}
 			return static_cast<T>(std::sqrt(len));
 		}
+		/**
+		 * @return Dot Product
+		 */
 		T dot(const Vec<N, T>& other) const {
 			T result = 0;
 			for (int i = 0; i<N; i++) {
@@ -68,6 +96,10 @@ namespace smath {
 			}
 			return result;
 		}
+		/**
+		 * @brief Custom boolean casting for vector
+		 * @return True if and only if all vector elements are True
+		 */
 		operator bool() const {
 			for(unsigned int i = 0; i<N; i++){
 				if(!this->data[i])return false;
