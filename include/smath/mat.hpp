@@ -1,11 +1,11 @@
 #ifndef SMATH_MAT_HPP
 #define SMATH_MAT_HPP
 
+#include "smath/vec.hpp"
 #include <cmath>
 #include <concepts>
 #include <iostream>
 #include <ostream>
-#include <smath/vec.hpp>
 #include <stdexcept>
 #include <string>
 #include <type_traits>
@@ -49,7 +49,6 @@ class Mat {
         requires((sizeof...(Us) == M * N) &&
                  (std::convertible_to<Us, T> && ...))
     Mat(Us... args) : data{static_cast<T>(args)...} {}
-
     // Copy constructor
     Mat(const Mat &other) = default;
     // Move constructor

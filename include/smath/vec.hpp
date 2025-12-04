@@ -89,14 +89,34 @@ class Vec {
         return static_cast<T>(std::sqrt(len));
     }
     /**
+     * @return squared length of the vector
+     */
+    T length2() const {
+        T len = 0;
+        for (int i = 0; i < N; i++) {
+            len += data[i] * data[i];
+        }
+        return len;
+    }
+    /**
+     * @return Cross Product
+     */
+    template <class U = T>
+        requires(N == 3)
+    Vec<3,T> cross(const Vec<3, T> &other) const {
+        return Vec<3, T>{(*this)[1] * other[2] - (*this)[2] * other[1],
+                         -(*this)[0] * other[2] + (*this)[2] * other[0],
+                         (*this)[0] * other[1] - (*this)[1] * other[0]};
+    }
+    /**
      * @return Dot Product
      */
-    T dot(const Vec<N, T> &other) const {
-        T result = 0;
-        for (int i = 0; i < N; i++) {
-            result += (*this)[i] * other[i];
+    Vec<N,T> dot(const Vec<N, T> &other) const {
+        T total = 0;
+        for (unsigned int i = 0; i < N; i++){
+            total += (*this)[i]*other[i];
         }
-        return result;
+        return total;
     }
     /**
      * @return Normalised Vector of the operand.
@@ -109,17 +129,33 @@ class Vec {
         }
         return temp;
     }
+
+    /***************************************
+            Operators Overload
+    ****************************************/
+
     /**
      * @brief Custom boolean casting for vector.
      * @return True if and only if all vector elements are True.
      */
     operator bool() const {
         for (unsigned int i = 0; i < N; i++) {
-            if (!this->data[i])
+            if (!(*this)[i])
                 return false;
         }
         return true;
     }
+    /**
+     * @brief Unary - operator, simply flip all element.
+     */
+    friend Vec<N, T> operator-(const Vec<N, T> &a) {
+        Vec<N, T> result{};
+        for (unsigned int i = 0; i < N; i++) {
+            result[i] = -a[i];
+        }
+        return result;
+    }
+
     friend Vec<N, T> operator+(const Vec<N, T> &a, const Vec<N, T> &b) {
         Vec<N, T> result{};
         for (unsigned int i = 0; i < N; i++) {
@@ -134,17 +170,12 @@ class Vec {
         }
         return result;
     }
-    friend Vec<N, T> operator-(const Vec<N, T> &a) {
+    friend Vec<N, T> operator*(const Vec<N, T> &a, const Vec<N, T> &b) {
         Vec<N, T> result{};
         for (unsigned int i = 0; i < N; i++) {
-            result[i] = -a[i];
+            result[i] = a[i] * b[i];
         }
         return result;
-    }
-
-    friend Vec<3, T> operator*(const Vec<3, T> &a, const Vec<3, T> &b) {
-        return Vec<3, T>{a[1] * b[2] - a[2] * b[1], -a[0] * b[2] + a[2] * b[0],
-                         a[0] * b[1] - a[1] * b[0]};
     }
     friend Vec<N, T> operator*(const Vec<N, T> &a, const T &b) {
         Vec<N, T> result{};
@@ -170,6 +201,54 @@ class Vec {
         }
         return result;
     }
+    Vec<N, T> &operator+=(const Vec<N, T> &other) {
+        for (unsigned int i = 0; i < N; i++) {
+            this[i] += other[i];
+        }
+        return *this;
+    };
+    Vec<N, T> &operator-=(const Vec<N, T> &other) {
+        for (unsigned int i = 0; i < N; i++) {
+            this[i] -= other[i];
+        }
+        return *this;
+    };
+    Vec<N, T> &operator*=(const Vec<N, T> &other) {
+        for (unsigned int i = 0; i < N; i++) {
+            this[i] *= other[i];
+        }
+        return *this;
+    };
+    Vec<N, T> &operator*=(const T &other) {
+        for (unsigned int i = 0; i < N; i++) {
+            this[i] *= other;
+        }
+        return *this;
+    };
+    Vec<N, T> &operator/=(const Vec<N, T> &other) {
+        for (unsigned int i = 0; i < N; i++) {
+            this[i] /= other[i];
+        }
+        return *this;
+    };
+    Vec<N, T> &operator/=(const T &other) {
+        for (unsigned int i = 0; i < N; i++) {
+            this[i] /= other;
+        }
+        return *this;
+    };
+    Vec<N, T> &operator%=(const Vec<N, T> &other) {
+        for (unsigned int i = 0; i < N; i++) {
+            this[i] %= other[i];
+        }
+        return *this;
+    };
+    Vec<N, T> &operator%=(const T &other) {
+        for (unsigned int i = 0; i < N; i++) {
+            this[i] %= other;
+        }
+        return *this;
+    };
     friend Vec<N, bool> operator==(const Vec<N, T> &a, const Vec<N, T> &b) {
         Vec<N, bool> result{};
         for (unsigned int i = 0; i < N; i++) {
@@ -181,6 +260,34 @@ class Vec {
         Vec<N, bool> result{};
         for (unsigned int i = 0; i < N; i++) {
             result[i] = (a[i] != b[i]) ? true : false;
+        }
+        return result;
+    }
+    friend Vec<N, bool> operator<(const Vec<N, T> &a, const Vec<N, T> &b) {
+        Vec<N, bool> result{};
+        for (unsigned int i = 0; i < N; i++) {
+            result[i] = (a[i] < b[i]) ? true : false;
+        }
+        return result;
+    }
+    friend Vec<N, bool> operator>(const Vec<N, T> &a, const Vec<N, T> &b) {
+        Vec<N, bool> result{};
+        for (unsigned int i = 0; i < N; i++) {
+            result[i] = (a[i] > b[i]) ? true : false;
+        }
+        return result;
+    }
+    friend Vec<N, bool> operator<=(const Vec<N, T> &a, const Vec<N, T> &b) {
+        Vec<N, bool> result{};
+        for (unsigned int i = 0; i < N; i++) {
+            result[i] = (a[i] <= b[i]) ? true : false;
+        }
+        return result;
+    }
+    friend Vec<N, bool> operator>=(const Vec<N, T> &a, const Vec<N, T> &b) {
+        Vec<N, bool> result{};
+        for (unsigned int i = 0; i < N; i++) {
+            result[i] = (a[i] >= b[i]) ? true : false;
         }
         return result;
     }
