@@ -7,6 +7,18 @@ TEST(PRINT_TEST) {
     std::cout << Mat2f(0, 1, 2, 3).toString() << std::endl;
     std::cout << Mat3f(0, 1, 2, 3, 4, 5, 6, 7, 8).toString() << std::endl;
 }
+TEST(ELEMENT_WISE_TEST){
+    auto mat00 = Mat<3,2, float>::full(4.0f);
+    auto mat01 = Mat<3,2, float>::full(4.0f);
+    auto r00 = Mat<3,2, float>::full(8.0f);
+    auto r01 = Mat<3,2, float>::full(0.0f);
+    auto r02 = Mat<3,2, float>::full(16.0f);
+    auto r03 = Mat<3,2, float>::full(1.0f);
+    assert_equal(mat00+mat01, r00);
+    assert_equal(mat00-mat01, r01);
+    assert_equal(mat00*mat01, r02);
+    assert_equal(mat00/mat01, r03);
+}
 TEST(TRANSPOSE_TEST) {
     assert_equal(Mat2f(0, 1, 2, 3).transpose(), Mat2f(0, 2, 1, 3));
 }
@@ -41,19 +53,19 @@ TEST(MULTIPLICATION_TEST) {
     auto mat00 = Mat2f(0, 1, 2, 3);
     auto mat01 = Mat<2, 1, float>(1, 2);
     auto r0 = Mat<2, 1, float>(4, 7);
-    assert_equal(mat00 * mat01, r0);
+    assert_equal(mat00.cross(mat01), r0);
     auto mat10 = Mat2f(0, 1, 2, 3);
     auto mat11 = Mat2f(4, 1, 2, -1);
     auto r1 = Mat2f(2, 7, -2, -1);
-    assert_equal(mat10 * mat11, r1);
+    assert_equal(mat10.cross(mat11), r1);
     auto mat20 = Mat2f(1, 2, 3, 4);
     auto mat21 = Mat2f::identity();
     auto r2 = mat20;
-    assert_equal(mat20 * mat21, r2);
+    assert_equal(mat20.cross(mat21), r2);
     auto mat30 = Mat3f(3, 2, -6, 7, 8, 1, 1, 0, -2);
     auto mat31 = Mat3f(1, -1, 7, 0, 0, -2, 5, 1, 2);
     auto r3 = Mat3f(3, -6, -21, -2, 0, 4, 24, 18, -33);
-    assert_equal(mat30 * mat31, r3);
+    assert_equal(mat30.cross(mat31), r3);
 }
 TEST(MAT_TO_VEC_TEST) {
     auto mat00 = Mat3f(1, 2, 3, 4, 5, 6, 7, 8, 9);

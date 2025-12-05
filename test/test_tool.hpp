@@ -6,6 +6,7 @@
 #include <iostream>
 #include <ratio>
 #include <smath/smath.hpp>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -113,6 +114,7 @@ static void assert_equal_impl(const T &value, const T &expected,
                   << value << "\nExpected:\n"
                   << expected << "\n";
         std::cout << failed_message << "\n";
+        throw std::runtime_error("TEST Failed");
     }
     std::cout << std::endl;
 }
@@ -128,6 +130,7 @@ static void assert_close_impl(const T &value, const T &expected,
                   << expected - threshold << " < " << expected << " < "
                   << expected + threshold << "\n";
         std::cout << failed_message << "\n";
+        throw std::runtime_error("TEST Failed");
     }
     // PASSED
     else {

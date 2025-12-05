@@ -4,6 +4,7 @@
 #include "smath/vec.hpp"
 #include <cmath>
 #include <concepts>
+#include <cstring>
 #include <iostream>
 #include <ostream>
 #include <stdexcept>
@@ -45,14 +46,29 @@ class Mat {
         }
         return i;
     }
+    static Mat<M, N, T> full(const T& value) {
+        Mat<M, N, T> result = {};
+        for (unsigned int n = 0; n < N; n++) {
+            for (unsigned int m = 0; m < M; m++) {
+                result.data[n * M + m] = value;
+            }
+        }
+        return result;
+    }
     template <class... Us>
         requires((sizeof...(Us) == M * N) &&
                  (std::convertible_to<Us, T> && ...))
     Mat(Us... args) : data{static_cast<T>(args)...} {}
     // Copy constructor
     Mat(const Mat &other) = default;
+    Mat(const Vec<M, T> &vec) {
+        std::memcpy(this->data, &(vec.data[0]), M * sizeof(T));
+    }
     // Move constructor
     Mat(Mat &&other) noexcept = default;
+    Mat(const Vec<M, T> &&vec) noexcept {
+        std::memcpy(this->data, &(vec.data[0]), M * sizeof(T));
+    }
     // Copy assignment
     Mat<M, N, T> &operator=(const Mat<M, N, T> &other) = default;
     // Move assignment
@@ -112,6 +128,23 @@ class Mat {
         }
         return vec;
     }
+
+    template <unsigned int K>
+    Mat<M, K, T> cross(const Mat<N, K, T> &other) const {
+        Mat<M, K, T> result{};
+        for (unsigned int k = 0; k < K; k++) {
+            for (unsigned int m = 0; m < M; m++) {
+                T temp = 0;
+                for (unsigned int n = 0; n < N; n++) {
+                    temp += (*this)[n * M + m] * other[k * N + n];
+                }
+                result[k * M + m] = temp;
+            }
+        }
+
+        return result;
+    }
+
     /**
      * @return A new transposed version of matrix.
      */
@@ -119,7 +152,7 @@ class Mat {
         Mat<M, N, T> copy = (*this);
         for (unsigned int m = 0; m < M; m++) {
             for (unsigned int n = 0; n < N; n++) {
-                copy.data[m * M + n] = this->data[n * N + m];
+                copy.data[m * M + n] = (*this)[n * N + m];
             }
         }
         return copy;
@@ -326,20 +359,14 @@ class Mat {
         }
         return result;
     }
-    template <unsigned int K>
-    friend Mat<M, K, T> operator*(const Mat<M, N, T> &a,
-                                  const Mat<N, K, T> &b) {
-        Mat<M, K, T> result{};
-        for (unsigned int k = 0; k < K; k++) {
+    friend Mat<M, N, T> operator*(const Mat<M, N, T> &a,
+                                  const Mat<M, N, T> &b) {
+        Mat<M, N, T> result = Mat<M,N,T>(a);
+        for (unsigned int n = 0; n < N; n++) {
             for (unsigned int m = 0; m < M; m++) {
-                T temp = 0;
-                for (unsigned int n = 0; n < N; n++) {
-                    temp += a[n * M + m] * b[k * N + n];
-                }
-                result[k * M + m] = temp;
+                result[n * M + m] *= b[n * M + m];
             }
         }
-
         return result;
     }
 
@@ -361,6 +388,16 @@ class Mat {
         }
         return result;
     }
+    friend Mat<M, N, T> operator/(const Mat<M, N, T> &a,
+                                  const Mat<M, N, T> &b) {
+        Mat<M, N, T> result = Mat<M,N,T>(a);
+        for (unsigned int n = 0; n < N; n++) {
+            for (unsigned int m = 0; m < M; m++) {
+                result[n * M + m] /= b[n * M + m];
+            }
+        }
+        return result;
+    }
     friend Mat<M, N, T> operator/(const Mat<M, N, T> a, const T &b) {
         return a * (1 / b);
     }
@@ -372,6 +409,62 @@ class Mat {
             }
         }
         return result;
+    }
+    Mat<M, N, T> &operator+=(const Mat<M, N, T> &other) {
+        for (unsigned int n = 0; n < N; n++) {
+            for (unsigned int m = 0; m < M; m++) {
+                this[n * M + m] += other[n * M + m];
+            }
+        }
+    }
+    Mat<M, N, T> &operator-=(const Mat<M, N, T> &other) {
+        for (unsigned int n = 0; n < N; n++) {
+            for (unsigned int m = 0; m < M; m++) {
+                this[n * M + m] -= other[n * M + m];
+            }
+        }
+    }
+    Mat<M, N, T> &operator*=(const Mat<M, N, T> &other) {
+        for (unsigned int n = 0; n < N; n++) {
+            for (unsigned int m = 0; m < M; m++) {
+                this[n * M + m] *= other[n * M + m];
+            }
+        }
+    }
+    Mat<M, N, T> &operator*=(const T &other) {
+        for (unsigned int n = 0; n < N; n++) {
+            for (unsigned int m = 0; m < M; m++) {
+                this[n * M + m] *= other;
+            }
+        }
+    }
+    Mat<M, N, T> &operator/=(const Mat<M, N, T> &other) {
+        for (unsigned int n = 0; n < N; n++) {
+            for (unsigned int m = 0; m < M; m++) {
+                this[n * M + m] /= other[n * M + m];
+            }
+        }
+    }
+    Mat<M, N, T> &operator/=(const T &other) {
+        for (unsigned int n = 0; n < N; n++) {
+            for (unsigned int m = 0; m < M; m++) {
+                this[n * M + m] /= other;
+            }
+        }
+    }
+    Mat<M, N, T> &operator%=(const Mat<M, N, T> &other) {
+        for (unsigned int n = 0; n < N; n++) {
+            for (unsigned int m = 0; m < M; m++) {
+                this[n * M + m] %= other[n * M + m];
+            }
+        }
+    }
+    Mat<M, N, T> &operator%=(const T &other) {
+        for (unsigned int n = 0; n < N; n++) {
+            for (unsigned int m = 0; m < M; m++) {
+                this[n * M + m] %= other;
+            }
+        }
     }
     friend bool operator==(const Mat<M, N, T> &a, const Mat<M, N, T> &b) {
         for (unsigned int n = 0; n < N; n++) {
