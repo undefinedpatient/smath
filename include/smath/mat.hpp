@@ -46,7 +46,7 @@ class Mat {
         }
         return i;
     }
-    static Mat<M, N, T> full(const T& value) {
+    static Mat<M, N, T> full(const T &value) {
         Mat<M, N, T> result = {};
         for (unsigned int n = 0; n < N; n++) {
             for (unsigned int m = 0; m < M; m++) {
@@ -54,6 +54,20 @@ class Mat {
             }
         }
         return result;
+    }
+    static Mat<4, 4, T> look_at(const Vec<3, T> &eye, const Vec<3, T> &target,
+                                const Vec<3, T> &up) {
+        const Vec<3, T> forward =
+            static_cast<Vec<3, T>>(target - eye).normalise();
+        const Vec<3, T> right = forward.cross(up.normalise());
+        const Vec<3, T> true_up = right.cross(forward);
+
+        return Mat<4, 4, T>{
+            right[0],right[1],right[2],0,
+            up[0],up[1],up[2],0,
+            forward[0],forward[1],forward[2],0,
+            0,0,0,1
+        };
     }
     template <class... Us>
         requires((sizeof...(Us) == M * N) &&
@@ -230,9 +244,9 @@ class Mat {
                 Mat<M - 1, N - 1, T> sub = this->subMatrixAt(n, 0);
                 T det = sub.determinant();
                 if (n % 2 == 0) {
-                    sum += det;
+                    sum += (*this)[M*n]*det;
                 } else {
-                    sum -= det;
+                    sum -= (*this)[M*n]*det;
                 }
             }
             return sum;
@@ -361,7 +375,7 @@ class Mat {
     }
     friend Mat<M, N, T> operator*(const Mat<M, N, T> &a,
                                   const Mat<M, N, T> &b) {
-        Mat<M, N, T> result = Mat<M,N,T>(a);
+        Mat<M, N, T> result = Mat<M, N, T>(a);
         for (unsigned int n = 0; n < N; n++) {
             for (unsigned int m = 0; m < M; m++) {
                 result[n * M + m] *= b[n * M + m];
@@ -390,7 +404,7 @@ class Mat {
     }
     friend Mat<M, N, T> operator/(const Mat<M, N, T> &a,
                                   const Mat<M, N, T> &b) {
-        Mat<M, N, T> result = Mat<M,N,T>(a);
+        Mat<M, N, T> result = Mat<M, N, T>(a);
         for (unsigned int n = 0; n < N; n++) {
             for (unsigned int m = 0; m < M; m++) {
                 result[n * M + m] /= b[n * M + m];
@@ -401,7 +415,17 @@ class Mat {
     friend Mat<M, N, T> operator/(const Mat<M, N, T> a, const T &b) {
         return a * (1 / b);
     }
-    friend Mat<M, N, T> operator%(const Mat<M, N, T> a, const T &b) {
+    friend Mat<M, N, T> operator%(const Mat<M, N, T> &a,
+                                  const Mat<M, N, int> &b) {
+        Mat<M, N, T> result = Mat<M, N, T>(a);
+        for (unsigned int n = 0; n < N; n++) {
+            for (unsigned int m = 0; m < M; m++) {
+                result[n * M + m] %= b[n * M + m];
+            }
+        }
+        return result;
+    }
+    friend Mat<M, N, T> operator%(const Mat<M, N, T> a, const int &b) {
         Mat<M, N, T> result = a;
         for (unsigned int n = 0; n < N; n++) {
             for (unsigned int m = 0; m < M; m++) {
