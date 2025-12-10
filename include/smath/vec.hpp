@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <concepts>
+#include <iostream>
 #include <ostream>
 #include <stdexcept>
 #include <type_traits>
@@ -83,7 +84,7 @@ class Vec {
      */
     T length() const {
         T len = 0;
-        for (int i = 0; i < N; i++) {
+        for (unsigned int i = 0; i < N; i++) {
             len += data[i] * data[i];
         }
         return static_cast<T>(std::sqrt(len));
@@ -111,7 +112,7 @@ class Vec {
     /**
      * @return Dot Product
      */
-    Vec<N,T> dot(const Vec<N, T> &other) const {
+    T dot(const Vec<N, T> &other) const {
         T total = 0;
         for (unsigned int i = 0; i < N; i++){
             total += (*this)[i]*other[i];
@@ -124,8 +125,9 @@ class Vec {
     Vec<N, T> normalise() const {
         Vec<N, T> temp{};
         const T length = this->length();
+        if (length==0) return Vec<N,T>{0,0,0};
         for (unsigned int i = 0; i < N; i++) {
-            temp[i] = this[i] / length;
+            temp[i] = (*this)[i] / length;
         }
         return temp;
     }
@@ -203,49 +205,49 @@ class Vec {
     }
     Vec<N, T> &operator+=(const Vec<N, T> &other) {
         for (unsigned int i = 0; i < N; i++) {
-            this[i] += other[i];
+            (*this)[i] += other[i];
         }
         return *this;
     };
     Vec<N, T> &operator-=(const Vec<N, T> &other) {
         for (unsigned int i = 0; i < N; i++) {
-            this[i] -= other[i];
+            (*this)[i] -= other[i];
         }
         return *this;
     };
     Vec<N, T> &operator*=(const Vec<N, T> &other) {
         for (unsigned int i = 0; i < N; i++) {
-            this[i] *= other[i];
+            (*this)[i] *= other[i];
         }
         return *this;
     };
     Vec<N, T> &operator*=(const T &other) {
         for (unsigned int i = 0; i < N; i++) {
-            this[i] *= other;
+            (*this)[i] *= other;
         }
         return *this;
     };
     Vec<N, T> &operator/=(const Vec<N, T> &other) {
         for (unsigned int i = 0; i < N; i++) {
-            this[i] /= other[i];
+            (*this)[i] /= other[i];
         }
         return *this;
     };
     Vec<N, T> &operator/=(const T &other) {
         for (unsigned int i = 0; i < N; i++) {
-            this[i] /= other;
+            (*this)[i] /= other;
         }
         return *this;
     };
     Vec<N, T> &operator%=(const Vec<N, T> &other) {
         for (unsigned int i = 0; i < N; i++) {
-            this[i] %= other[i];
+            (*this)[i] %= other[i];
         }
         return *this;
     };
     Vec<N, T> &operator%=(const T &other) {
         for (unsigned int i = 0; i < N; i++) {
-            this[i] %= other;
+            (*this)[i] %= other;
         }
         return *this;
     };
@@ -313,5 +315,9 @@ class Vec {
 
 using Vec3f = Vec<3, float>;
 using Vec3d = Vec<3, double>;
+using Vec3b = Vec<3,bool>;
+using Vec4f = Vec<4, float>;
+using Vec4d = Vec<4, double>;
+using Vec4b = Vec<4,bool>;
 } // namespace smath
 #endif // SMATH_VEC3_HPP

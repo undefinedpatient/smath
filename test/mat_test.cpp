@@ -12,19 +12,51 @@ TEST(ELEMENT_WISE_TEST){
     auto mat01 = Mat<3,2, float>::full(4.0f);
     auto mat02 = Mat<3,2, int>::full(4);
     auto mat03 = Mat<3,2, int>::full(3);
+    auto mat04 = Mat<3,2, float>{
+        0,1,
+        2,3,
+        4,5
+    };
     auto r00 = Mat<3,2, float>::full(8.0f);
     auto r01 = Mat<3,2, float>::full(0.0f);
     auto r02 = Mat<3,2, float>::full(16.0f);
     auto r03 = Mat<3,2, float>::full(1.0f);
     auto r04 = Mat<3,2, int>::full(1);
+    auto r05 = Mat<3,2,float>{
+        4,3,
+        2,1,
+        0,-1
+    };
     assert_equal(mat00+mat01, r00);
     assert_equal(mat00-mat01, r01);
     assert_equal(mat00*mat01, r02);
     assert_equal(mat00/mat01, r03);
     assert_equal(mat02%mat03, r04);
+    assert_equal(mat00-mat04, r05);
 }
 TEST(TRANSPOSE_TEST) {
     assert_equal(Mat2f(0, 1, 2, 3).transpose(), Mat2f(0, 2, 1, 3));
+    Mat<3,2,float> mat00 = Mat<2,3, float>{
+        0,1,
+        2,3,
+        4,5
+    }.transpose();
+    Mat<3,2,float> mat01 = Mat<3,2, float>{
+        0,2,4,
+        1,3,5
+    };
+    assert_equal(mat00, mat01);
+    Mat<2,4,float> mat10 = Mat<4,2, float>{
+        0,1,2,3,
+        4,5,6,7
+    }.transpose();
+    Mat<2,4,float> mat11 = Mat<2,4, float>{
+        0,4,
+        1,5,
+        2,6,
+        3,7
+    };
+    assert_equal(mat10, mat11);
 }
 TEST(DETERMINANT_TEST) {
     assert_equal(Mat2f(0, 0, 0, 0).determinant(), 0.0f);

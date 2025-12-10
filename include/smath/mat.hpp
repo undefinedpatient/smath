@@ -55,20 +55,6 @@ class Mat {
         }
         return result;
     }
-    static Mat<4, 4, T> look_at(const Vec<3, T> &eye, const Vec<3, T> &target,
-                                const Vec<3, T> &up) {
-        const Vec<3, T> forward =
-            static_cast<Vec<3, T>>(target - eye).normalise();
-        const Vec<3, T> right = forward.cross(up.normalise());
-        const Vec<3, T> true_up = right.cross(forward);
-
-        return Mat<4, 4, T>{
-            right[0],right[1],right[2],0,
-            up[0],up[1],up[2],0,
-            forward[0],forward[1],forward[2],0,
-            0,0,0,1
-        };
-    }
     template <class... Us>
         requires((sizeof...(Us) == M * N) &&
                  (std::convertible_to<Us, T> && ...))
@@ -162,11 +148,11 @@ class Mat {
     /**
      * @return A new transposed version of matrix.
      */
-    Mat<M, N, T> transpose() const {
-        Mat<M, N, T> copy = (*this);
+    Mat<N, M, T> transpose() const {
+        Mat<N, M, T> copy{};
         for (unsigned int m = 0; m < M; m++) {
             for (unsigned int n = 0; n < N; n++) {
-                copy.data[m * M + n] = (*this)[n * N + m];
+                copy[m * N + n] = (*this)[n * M + m];
             }
         }
         return copy;
@@ -244,9 +230,9 @@ class Mat {
                 Mat<M - 1, N - 1, T> sub = this->subMatrixAt(n, 0);
                 T det = sub.determinant();
                 if (n % 2 == 0) {
-                    sum += (*this)[M*n]*det;
+                    sum += (*this)[M * n] * det;
                 } else {
-                    sum -= (*this)[M*n]*det;
+                    sum -= (*this)[M * n] * det;
                 }
             }
             return sum;
@@ -437,56 +423,56 @@ class Mat {
     Mat<M, N, T> &operator+=(const Mat<M, N, T> &other) {
         for (unsigned int n = 0; n < N; n++) {
             for (unsigned int m = 0; m < M; m++) {
-                this[n * M + m] += other[n * M + m];
+                (*this)[n * M + m] += other[n * M + m];
             }
         }
     }
     Mat<M, N, T> &operator-=(const Mat<M, N, T> &other) {
         for (unsigned int n = 0; n < N; n++) {
             for (unsigned int m = 0; m < M; m++) {
-                this[n * M + m] -= other[n * M + m];
+                (*this)[n * M + m] -= other[n * M + m];
             }
         }
     }
     Mat<M, N, T> &operator*=(const Mat<M, N, T> &other) {
         for (unsigned int n = 0; n < N; n++) {
             for (unsigned int m = 0; m < M; m++) {
-                this[n * M + m] *= other[n * M + m];
+                (*this)[n * M + m] *= other[n * M + m];
             }
         }
     }
     Mat<M, N, T> &operator*=(const T &other) {
         for (unsigned int n = 0; n < N; n++) {
             for (unsigned int m = 0; m < M; m++) {
-                this[n * M + m] *= other;
+                (*this)[n * M + m] *= other;
             }
         }
     }
     Mat<M, N, T> &operator/=(const Mat<M, N, T> &other) {
         for (unsigned int n = 0; n < N; n++) {
             for (unsigned int m = 0; m < M; m++) {
-                this[n * M + m] /= other[n * M + m];
+                (*this)[n * M + m] /= other[n * M + m];
             }
         }
     }
     Mat<M, N, T> &operator/=(const T &other) {
         for (unsigned int n = 0; n < N; n++) {
             for (unsigned int m = 0; m < M; m++) {
-                this[n * M + m] /= other;
+                (*this)[n * M + m] /= other;
             }
         }
     }
     Mat<M, N, T> &operator%=(const Mat<M, N, T> &other) {
         for (unsigned int n = 0; n < N; n++) {
             for (unsigned int m = 0; m < M; m++) {
-                this[n * M + m] %= other[n * M + m];
+                (*this)[n * M + m] %= other[n * M + m];
             }
         }
     }
     Mat<M, N, T> &operator%=(const T &other) {
         for (unsigned int n = 0; n < N; n++) {
             for (unsigned int m = 0; m < M; m++) {
-                this[n * M + m] %= other;
+                (*this)[n * M + m] %= other;
             }
         }
     }
@@ -517,5 +503,24 @@ using Mat4d = Mat<4, 4, double>;
 using Mat3d = Mat<3, 3, double>;
 using Mat2d = Mat<2, 2, double>;
 using Mat1d = Mat<1, 1, double>;
+template <class T>
+Mat<4, 4, T> look_at(const Vec<3, T> &eye, const Vec<3, T> &target,
+                     const Vec<3, T> &up) {
+    const Vec<3, T> forward = static_cast<Vec<3, T>>(target - eye).normalise();
+    const Vec<3, T> right = forward.cross(up.normalise());
+    const Vec<3, T> true_up = right.cross(forward);
+
+    return Mat<4, 4, T>{
+        right[0],   right[1],   right[2],   0, up[0], up[1], up[2], 0,
+        forward[0], forward[1], forward[2], 0, 0,     0,     0,     1};
+}
+template <class T> Mat<4, 4, T> perspective(const T& aspect_ratio, const T& fov, const T& near, const T& far) {
+    return Mat<4, 4, T>{
+        1/(aspect_ratio*std::tan(fov/2)),0,0,0,
+        0,1/std::tan(fov/2), 0, 0,
+        0, 0, -(far+near)/(far-near), -1,
+        0, 0, -(2*far*near)/(far-near)
+    };
+}
 } // namespace smath
 #endif
