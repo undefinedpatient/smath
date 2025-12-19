@@ -6,6 +6,8 @@
 > - dot product
 > - cross product
 > - Element Wise Comparsion
+> - Projection on Vector
+> - Rotate on arbitrary axis
 
 > ## Matrix (Up to 16x16)
 > Supported Operations
@@ -15,6 +17,7 @@
 > - Transpose
 > - Invert/Adjoint Matrix
 > - Matrices Multiplication
+> - Perspective Matrix
 
 
 
