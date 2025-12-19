@@ -131,6 +131,31 @@ class Vec {
         }
         return temp;
     }
+    T angle(const Vec<N,T> other) const {
+        return std::acos(this->dot(other)/(this->length()*other.length()));
+    }
+
+    /**
+     * @brief Defined only for vec3.
+     * @return Projection on target Vector.
+     */
+    Vec<3,T> project(const Vec<3,T> other) const {
+        return other*(this->dot(other)/other.length2());
+    }
+
+    /**
+     * @brief Vector rotation based on Rodrigues' rotation formula.
+     * @return Rotation on input axis by input radian.
+     */
+    Vec<3,T> rotate(const T& radian, const Vec<3,T> axis = {0,0,1}) const {
+        Vec<3,T> n = axis.normalise();
+        
+        
+        return (1-std::cos(radian))*(n.dot((*this))*(n))
+        + std::cos(radian)*(*this)
+        + std::sin(radian)*(this->cross(n));
+    }
+    
 
     /***************************************
             Operators Overload

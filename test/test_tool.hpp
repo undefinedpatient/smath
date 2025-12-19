@@ -123,7 +123,12 @@ template <class T>
 static void assert_close_impl(const T &value, const T &expected,
                               const T &threshold, const char *valueString) {
     // FAILED
-    if (value > expected + threshold || value < expected - threshold) {
+    if (value < expected + threshold && value > expected - threshold) {
+        std::cout << "Test: Assert Close | Evaluate: " << valueString << "\n";
+        std::cout << passed_message << "\n";
+    }
+    // PASSED
+    else {
         std::cout << "Test: Assert Close \nEvaluate: " << valueString << "\n";
         std::cout << "Get:\n" << value << "\n";
         std::cout << "Expected:\n"
@@ -131,11 +136,6 @@ static void assert_close_impl(const T &value, const T &expected,
                   << expected + threshold << "\n";
         std::cout << failed_message << "\n";
         throw std::runtime_error("TEST Failed");
-    }
-    // PASSED
-    else {
-        std::cout << "Test: Assert Close | Evaluate: " << valueString << "\n";
-        std::cout << passed_message << "\n";
     }
     std::cout << std::endl;
 }

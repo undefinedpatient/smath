@@ -67,6 +67,7 @@ class Mat {
     // Move constructor
     Mat(Mat &&other) noexcept = default;
     Mat(const Vec<M, T> &&vec) noexcept {
+        if (N!=1) throw std::invalid_argument("Invalid Matrix initialisation.");
         std::memcpy(this->data, &(vec.data[0]), M * sizeof(T));
     }
     // Copy assignment
@@ -503,6 +504,8 @@ using Mat4d = Mat<4, 4, double>;
 using Mat3d = Mat<3, 3, double>;
 using Mat2d = Mat<2, 2, double>;
 using Mat1d = Mat<1, 1, double>;
+
+
 template <class T>
 Mat<4, 4, T> look_at(const Vec<3, T> &eye, const Vec<3, T> &target,
                      const Vec<3, T> &up) {
@@ -514,6 +517,8 @@ Mat<4, 4, T> look_at(const Vec<3, T> &eye, const Vec<3, T> &target,
         right[0],   right[1],   right[2],   0, up[0], up[1], up[2], 0,
         forward[0], forward[1], forward[2], 0, 0,     0,     0,     1};
 }
+
+
 template <class T> Mat<4, 4, T> perspective(const T& aspect_ratio, const T& fov, const T& near, const T& far) {
     return Mat<4, 4, T>{
         1/(aspect_ratio*std::tan(fov/2)),0,0,0,
@@ -522,5 +527,6 @@ template <class T> Mat<4, 4, T> perspective(const T& aspect_ratio, const T& fov,
         0, 0, -(2*far*near)/(far-near)
     };
 }
+
 } // namespace smath
 #endif
