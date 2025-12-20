@@ -2,10 +2,10 @@
 
 > ## Vector (Up to 16)
 > Supported Operations
-> - length / length2
-> - dot product
-> - cross product
-> - Element Wise Comparsion
+> - Length / Length2
+> - Inner product / Outer product
+> - Cross product
+> - Element wise operations
 > - Projection on Vector
 > - Rotate on arbitrary axis
 
@@ -19,5 +19,6 @@
 > - Matrices Multiplication
 > - Perspective Matrix
 
+For coordinate system relevant computation (projection matrix), they are all based on `right-handed y-up` system.
 
 

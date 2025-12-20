@@ -67,7 +67,8 @@ class Mat {
     // Move constructor
     Mat(Mat &&other) noexcept = default;
     Mat(const Vec<M, T> &&vec) noexcept {
-        if (N!=1) throw std::invalid_argument("Invalid Matrix initialisation.");
+        if (N != 1)
+            throw std::invalid_argument("Invalid Matrix initialisation.");
         std::memcpy(this->data, &(vec.data[0]), M * sizeof(T));
     }
     // Copy assignment
@@ -505,6 +506,15 @@ using Mat3d = Mat<3, 3, double>;
 using Mat2d = Mat<2, 2, double>;
 using Mat1d = Mat<1, 1, double>;
 
+/**
+ * @return Calculate the outer product of vectors.
+ */
+template <unsigned int N, class T>
+Mat<N, N, T> outer_product(const Vec<N, T> left, const Vec<N, T> right) {
+    Mat<N, 1, T> l{left};
+    Mat<1, N, T> r{right};
+    return l.cross(r.transpose());
+}
 
 template <class T>
 Mat<4, 4, T> look_at(const Vec<3, T> &eye, const Vec<3, T> &target,
@@ -518,14 +528,75 @@ Mat<4, 4, T> look_at(const Vec<3, T> &eye, const Vec<3, T> &target,
         forward[0], forward[1], forward[2], 0, 0,     0,     0,     1};
 }
 
-
-template <class T> Mat<4, 4, T> perspective(const T& aspect_ratio, const T& fov, const T& near, const T& far) {
-    return Mat<4, 4, T>{
-        1/(aspect_ratio*std::tan(fov/2)),0,0,0,
-        0,1/std::tan(fov/2), 0, 0,
-        0, 0, -(far+near)/(far-near), -1,
-        0, 0, -(2*far*near)/(far-near)
+/**
+ * @brief This is a function generating the perspective projection matrix based
+ * on right-hand coordinate system, assuming camera pointing along the -z axis.
+ * Note that near and far are absolute value indicating the distance from the camera.
+ */
+template <class T>
+Mat<4, 4, T> perspective(const T &aspect_ratio, const T &fov, const T &near,
+                         const T &far) {
+    const T n = -near;
+    const T f = -far;
+    return Mat<4, 4, T>{1 / (aspect_ratio * std::tan(fov / 2)),
+                        0,
+                        0,
+                        0,
+                        0,
+                        1 / std::tan(fov / 2),
+                        0,
+                        0,
+                        0,
+                        0,
+                        (f + n) / (n - f),
+                        1,
+                        0,
+                        0,
+                        -(2 * f * n) / (n - f)};
+}
+/**
+ * @brief This is a alternative function generating the perspective projection matrix based
+ * on right-hand coordinate system, assuming camera pointing along the -z axis.
+ * Note that near and far are absolute value indicating the distance from the camera.
+ */
+template <class T>
+Mat<4, 4, T> perspective(const T &left, const T &right, const T &top,
+                         const T &bottom, const T &near, const T &far) {
+    const T n = -near;
+    const T f = -far;
+    return Mat<4,4,T>{
+        (2*n)/(right-left),0,0,0,
+        0,(2*n)/(top-bottom),0,0,
+        -((right+left)/(right-left)),-((top+bottom)/(top-bottom)),2*((f+n/(n-f)),1,
+        0,0,-((2*f*n)/(n-f)),0
     };
+}
+/**
+ * @brief This is a function generating the orthographic projection matrix based
+ * on right-hand coordinate system, assuming camera pointing along the -z axis.
+ * Note that near and far are absolute value indicating the distance from the camera.
+ */
+template <class T>
+Mat<4, 4, T> orthgraphic(const T &left, const T &right, const T &top,
+                         const T &bottom, const T &near, const T &far) {
+    const T n = -near;
+    const T f = -far;
+    return Mat<4, 4, T>{2 / (right - left),
+                        0,
+                        0,
+                        0,
+                        0,
+                        2 / (top - bottom),
+                        0,
+                        0,
+                        0,
+                        0,
+                        2 / (n- f),
+                        0,
+                        -(left + right) / (right - left),
+                        -(top + bottom) / (top - bottom),
+                        -(n+ f) / (n- f),
+                        1};
 }
 
 } // namespace smath
