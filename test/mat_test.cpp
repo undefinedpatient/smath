@@ -1,5 +1,5 @@
 #include "test_tool.hpp"
-#include <smath/smath.hpp>
+#include "smath/smath.hpp"
 
 using namespace smath;
 

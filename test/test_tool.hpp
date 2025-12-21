@@ -5,7 +5,6 @@
 #include <exception>
 #include <iostream>
 #include <ratio>
-#include <smath/smath.hpp>
 #include <stdexcept>
 #include <string>
 #include <vector>

@@ -534,6 +534,7 @@ Mat<4, 4, T> look_at(const Vec<3, T> &eye, const Vec<3, T> &target,
  * Note that near and far are absolute value indicating the distance from the camera.
  */
 template <class T>
+    requires (std::is_arithmetic<T>::value)
 Mat<4, 4, T> perspective(const T &aspect_ratio, const T &fov, const T &near,
                          const T &far) {
     const T n = -near;
@@ -567,7 +568,7 @@ Mat<4, 4, T> perspective(const T &left, const T &right, const T &top,
     return Mat<4,4,T>{
         (2*n)/(right-left),0,0,0,
         0,(2*n)/(top-bottom),0,0,
-        -((right+left)/(right-left)),-((top+bottom)/(top-bottom)),2*((f+n/(n-f)),1,
+        -((right+left)/(right-left)),-((top+bottom)/(top-bottom)),2*((f+n)/(n-f)),1,
         0,0,-((2*f*n)/(n-f)),0
     };
 }
@@ -597,7 +598,7 @@ Mat<4, 4, T> orthgraphic(const T &left, const T &right, const T &top,
                         -(top + bottom) / (top - bottom),
                         -(n+ f) / (n- f),
                         1};
-}
+};
 
 } // namespace smath
 #endif
