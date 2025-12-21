@@ -64,7 +64,7 @@ class Vec {
     /**
      * @return String representation of vector
      */
-    std::string toString() const {
+    constexpr std::string toString() const {
         std::string str = "Vec" + std::to_string(N) + "<";
         for (unsigned int i = 0; i < N; i++) {
             str += std::to_string(data[i]);
@@ -102,9 +102,7 @@ class Vec {
     /**
      * @return Cross Product
      */
-    template <class U = T>
-        requires(N == 3)
-    Vec<3, T> cross(const Vec<3, T> &other) const {
+    Vec<3, T> cross(const Vec<3, T> &other) const requires (N==3) {
         return Vec<3, T>{(*this)[1] * other[2] - (*this)[2] * other[1],
                          -(*this)[0] * other[2] + (*this)[2] * other[0],
                          (*this)[0] * other[1] - (*this)[1] * other[0]};
@@ -140,7 +138,7 @@ class Vec {
      * @brief Defined only for vec3.
      * @return Projection on target Vector.
      */
-    Vec<3, T> project(const Vec<3, T> other) const {
+    Vec<3, T> project(const Vec<3, T> other) const requires (N==3) {
         return other * (this->dot(other) / other.length2());
     }
 
@@ -148,7 +146,7 @@ class Vec {
      * @brief Vector rotation based on Rodrigues' rotation formula.
      * @return Rotation on input axis by input radian.
      */
-    Vec<3, T> rotate(const T &radian, const Vec<3, T> axis = {0, 0, 1}) const {
+    Vec<3, T> rotate(const T &radian, const Vec<3, T> axis = {0, 0, 1}) const requires (N==3) {
         Vec<3, T> n = axis.normalise();
 
         return (1 - std::cos(radian)) * (n.dot((*this)) * (n)) +

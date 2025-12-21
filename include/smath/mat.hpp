@@ -244,9 +244,9 @@ class Mat {
     /**
      * @brief 2D translation for 3x3 homogeneous matrix
      */
-    template <typename U = T>
-        requires(M == 3 && N == 3)
-    Mat<3, 3, T> translate(const Vec<2, T> vec2) const {
+    // template <typename U = T>
+    //     requires(M == 3 && N == 3)
+    Mat<3, 3, T> translate(const Vec<2, T> vec2) const requires (M==3&&N==3){
         const Mat<3, 3, T> translation = {1, 0,       0,       0, 1,
                                           0, vec2[0], vec2[1], 1};
         return (*this) * translation;
@@ -255,9 +255,9 @@ class Mat {
     /**
      * @brief 3D translation for 4x4 homogeneous matrix
      */
-    template <typename U = T>
-        requires(M == 4 && N == 4)
-    Mat<4, 4, T> translate(const Vec<3, T> vec3) const {
+    // template <typename U = T>
+    //     requires(M == 4 && N == 4)
+    Mat<4, 4, T> translate(const Vec<3, T> vec3) const requires (M==4&&N==3){
         const Mat<4, 4, T> translation = {
             1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, vec3[0], vec3[1], vec3[2], 1};
         return (*this) * translation;
@@ -266,9 +266,9 @@ class Mat {
     /**
      * @brief 2D rotation on 2x2 matrix
      */
-    template <typename U = T>
-        requires(M == 2 && N == 2)
-    Mat<2, 2, T> rotate(const U &radian) const {
+    // template <typename U = T>
+    //     requires(M == 2 && N == 2)
+    Mat<2, 2, T> rotate(const T &radian) const requires (M==2&&N==2){
         return Mat<2, 2, T>(std::cos(radian), std::sin(radian),
                             -std::sin(radian), std::cos(radian)) *
                (*this);
@@ -278,7 +278,7 @@ class Mat {
      */
     template <typename U = T>
         requires(M == 3 && N == 3)
-    Mat<3, 3, T> rotate(const U &radian) const {
+    Mat<3, 3, T> rotate(const T &radian) const requires (M==3&&N==3){
         return Mat<3, 3, T>(std::cos(radian), std::sin(radian),
                             -std::sin(radian), std::cos(radian)) *
                (*this);
@@ -287,10 +287,10 @@ class Mat {
     /**
      * @brief 3D rotation on 3x3 matrix
      */
-    template <typename U = T>
-        requires(M == 3 && N == 3)
+    // template <typename U = T>
+    //     requires(M == 3 && N == 3)
     Mat<3, 3, T> rotate(const T &radian,
-                        const Vec<3, T> &axis = {1, 0, 0}) const {
+                        const Vec<3, T> &axis = {1, 0, 0}) const requires (M==3&&N==3){
         const auto unit = axis.normalise();
         using namespace std;
         Mat<3, 3, T> rotation = {
@@ -312,10 +312,10 @@ class Mat {
     /**
      * @brief 3D rotation on 4x4 homogeneous matrix
      */
-    template <typename U = T>
-        requires(M == 4 && N == 4)
+    // template <typename U = T>
+    //     requires(M == 4 && N == 4)
     Mat<4, 4, T> rotate(const T &radian, const Vec<4, T> &axis = {1, 0, 0},
-                        Vec<3, T> pivot = {0, 0, 0}) const {
+                        Vec<3, T> pivot = {0, 0, 0}) const requires (M==4&&N==4){
         const auto unit = axis.normalise();
         using namespace std;
         Mat<4, 4, T> rotation = {
