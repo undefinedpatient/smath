@@ -108,14 +108,14 @@ TEST(MULTIPLICATION_TEST) {
 }
 TEST(MAT_TO_VEC_TEST) {
     auto mat00 = Mat3f(1, 2, 3, 4, 5, 6, 7, 8, 9);
-    auto r00 = mat00.toVectors()[0] == Vec3f(1, 2, 3);
-    assert_equal(mat00.toVectors()[0], Vec3f(1, 2, 3));
-    assert_equal(mat00.toVectors()[1], Vec3f(4, 5, 6));
-    assert_equal(mat00.toVectors()[2], Vec3f(7, 8, 9));
+    auto r00 = mat00.to_vectors()[0] == Vec3f(1, 2, 3);
+    assert_equal(mat00.to_vectors()[0], Vec3f(1, 2, 3));
+    assert_equal(mat00.to_vectors()[1], Vec3f(4, 5, 6));
+    assert_equal(mat00.to_vectors()[2], Vec3f(7, 8, 9));
 
     auto mat01 = Mat<3, 2, float>(1, 2, 3, 4, 5, 6);
-    assert_equal(mat01.toVectors()[0], Vec3f(1, 2, 3));
-    assert_equal(mat01.toVectors()[1], Vec3f(4, 5, 6));
+    assert_equal(mat01.to_vectors()[0], Vec3f(1, 2, 3));
+    assert_equal(mat01.to_vectors()[1], Vec3f(4, 5, 6));
 }
 
 TEST(INVERSION_TEST) {

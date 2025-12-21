@@ -7,10 +7,11 @@
 #include <ostream>
 #include <stdexcept>
 #include <type_traits>
+#include <cstring>
 
 namespace smath {
 template <unsigned int N, class T>
-    requires((std::is_arithmetic_v<T> || std::is_integral_v<T>) && N < 16)
+    requires(std::is_arithmetic_v<T> && N <= 32)
 class Vec {
   private:
     T data[N];
@@ -24,9 +25,10 @@ class Vec {
         requires(sizeof...(Us) == N && (std::convertible_to<Us, T> && ...))
     Vec(Us... args) : data{static_cast<T>(args)...} {}
     explicit Vec(const T *arr) {
-        for (unsigned int i = 0; i < N; i++) {
-            this->data[i] = arr[i];
-        }
+        // for (unsigned int i = 0; i < N; i++) {
+        //     this->data[i] = arr[i];
+        // }
+        std::memcpy(this->data, arr, N*(sizeof(T)));
     }
     // Copy constructor
     Vec(const Vec &other) = default;
@@ -158,10 +160,10 @@ class Vec {
     ****************************************/
 
     /**
-     * @brief Custom boolean casting for vector.
+     * @brief Custom boolean casting for vector. This require the element in the Vec to be able to convert to bool.
      * @return True if and only if all vector elements are True.
      */
-    operator bool() const {
+    explicit operator bool() const {
         for (unsigned int i = 0; i < N; i++) {
             if (!(*this)[i])
                 return false;

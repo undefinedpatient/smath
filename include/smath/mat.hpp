@@ -19,7 +19,7 @@ namespace smath {
     [r0,r0,r0,r1,r1,r1,r2,r2,r2]
 */
 template <unsigned int M, unsigned int N, class T>
-    requires(std::is_arithmetic<T>::value && M < 16 && N < 16)
+    requires(std::is_arithmetic_v<T> && M <= 32 && N <= 32)
 class Mat {
   private:
     T data[M * N]{};
@@ -119,7 +119,7 @@ class Mat {
     /**
      * @return An array of length N, consists of Vec<M,T>.
      */
-    std::array<Vec<M, T>, N> toVectors() const {
+    std::array<Vec<M, T>, N> to_vectors() const {
         std::array<Vec<M, T>, N> vec;
         for (unsigned int n = 0; n < N; n++) {
             T temp_data[M];
