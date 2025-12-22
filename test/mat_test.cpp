@@ -88,6 +88,10 @@ TEST(SUBMATRIX_TEST) {
                  Mat3f(0, 1, 2, 4, 5, 6, 8, 9, 10));
 }
 
+TEST(TO_HOMOGENEOUS_TEST){
+    assert_equal(Mat3f(0,1,2,3,4,5,6,7,8).to_homogeneous(),Mat4f(0,1,2,0,3,4,5,0,6,7,8,0,0,0,0,1));
+}
+
 TEST(MULTIPLICATION_TEST) {
     auto mat00 = Mat2f(0, 1, 2, 3);
     auto mat01 = Mat<2, 1, float>(1, 2);
