@@ -72,10 +72,10 @@ TEST(VEC_ROTATION_TEST){
 }
 
 TEST(VEC_COMPARISON_OPERATORS) {
-    assert_equal(Vec3f(1, 2, 3) == Vec3f(1, 2, 3), Vec3b(true, true, true));
-    assert_equal(Vec3f(1, 2, 3) != Vec3f(1, 2, 4), Vec3b(false, false, true));
-    assert_equal(Vec3f(1, 5, 3) > Vec3f(0, 4, 3), Vec3b(true, true, false));
-    assert_equal(Vec3f(1, 2, 3) <= Vec3f(1, 3, 3), Vec3b(true, true, true));
+    assert_equal(Vec3f(1, 2, 3) == Vec3f(1, 2, 3), Vec3u(1, 1, 1));
+    assert_equal(Vec3f(1, 2, 3) != Vec3f(1, 2, 4), Vec3u(0, 0, 1));
+    assert_equal(Vec3f(1, 5, 3) > Vec3f(0, 4, 3), Vec3u(1, 1, 0));
+    assert_equal(Vec3f(1, 2, 3) <= Vec3f(1, 3, 3), Vec3u(1, 1, 1));
 }
 
 TEST(VEC_SWIZZLING_LIKE_ACCESS) {
@@ -94,4 +94,4 @@ TEST(VEC_NEGATION_AND_ASSIGNMENT) {
     assert_equal(v, Vec3f(1, -2, 3));
 }
 
-int main() { return TestRunner::instance().run("Length Test"); }
+int main() { return TestRunner::instance().run("Vector Test"); }

@@ -143,7 +143,18 @@ class Mat {
                 result[k * M + m] = temp;
             }
         }
+        return result;
+    }
 
+    Vec<M,T> cross(const Vec<M,T>& other) const {
+        Vec<M,T> result{};
+        for (unsigned int m = 0; m < M; m++){
+            T temp = 0;
+            for (unsigned int n = 0; n < N; n++){
+                temp += (*this)[n*M+m]*result[n];
+            }
+            result[m] = temp;
+        }
         return result;
     }
 
@@ -240,7 +251,16 @@ class Mat {
             return sum;
         }
     }
-
+    /**
+     * @brief Compute the sum along the matrix diagonal.
+     */
+    T trace() const requires (M==N){
+        T result = static_cast<T>(0.0f);
+        for (unsigned int i = 0; i< N; i++){
+            result += data[i*M+i];
+        }
+        return result;
+    }
     /**
      * @brief 2D translation for 3x3 homogeneous matrix
      */
@@ -276,14 +296,14 @@ class Mat {
     /**
      * @brief 2D rotation on 3x3 homogeneous matrix
      */
-    template <typename U = T>
-        requires(M == 3 && N == 3)
+    // template <typename U = T>
+    //     requires(M == 3 && N == 3)
     Mat<3, 3, T> rotate(const T &radian) const requires (M==3&&N==3){
-        return Mat<3, 3, T>(std::cos(radian), std::sin(radian),
-                            -std::sin(radian), std::cos(radian)) *
+        return Mat<3, 3, T>(std::cos(radian), std::sin(radian),0,
+                            -std::sin(radian), std::cos(radian),0,
+                            0,0,1) *
                (*this);
     }
-
     /**
      * @brief 3D rotation on 3x3 matrix
      */
@@ -338,7 +358,7 @@ class Mat {
             0,
             0,
             1};
-        return rotation * (*this).translate(-pivot);
+        return (rotation * (*this).translate(-pivot)).translate(pivot);
     }
 
     friend Mat<M, N, T> operator+(const Mat<M, N, T> &a,
@@ -505,6 +525,54 @@ using Mat4d = Mat<4, 4, double>;
 using Mat3d = Mat<3, 3, double>;
 using Mat2d = Mat<2, 2, double>;
 using Mat1d = Mat<1, 1, double>;
+/**
+ * @brief Short-cut for 2D euler rotation.
+ */
+template <class T>
+    requires (std::is_arithmetic_v<T>)
+Mat<2,2,T> euler(const T& radian) {
+    using namespace std;
+    return Mat<2,2,T>{cos(radian), sin(radian), -sin(radian), cos(radian)};
+}
+/**
+ * @brief Short-cut for 3D euler rotation on x-axis.
+ */
+template <class T>
+    requires (std::is_arithmetic_v<T>)
+Mat<3,3,T> euler_x(const T& radian) {
+    using namespace std;
+    return Mat<3,3,T>{
+        cos(radian), sin(radian), 0,
+        -sin(radian), cos(radian), 0,
+        0 ,0 ,1
+    };
+}
+/**
+ * @brief Short-cut for 3D euler rotation on y-axis.
+ */
+template <class T>
+    requires (std::is_arithmetic_v<T>)
+Mat<3,3,T> euler_y(const T& radian) {
+    using namespace std;
+    return Mat<3,3,T>{
+        cos(radian), 0, -sin(radian),
+        0,1,0,
+        sin(radian), 0, cos(radian)
+    };
+}
+/**
+ * @brief Short-cut for 3D euler rotation on z-axis.
+ */
+template <class T>
+    requires (std::is_arithmetic_v<T>)
+Mat<3,3,T> euler_z(const T& radian) {
+    using namespace std;
+    return Mat<3,3,T>{
+        1 ,0 ,0
+        0, cos(radian), sin(radian),
+        0, -sin(radian), cos(radian)
+    };
+}
 
 /**
  * @return Calculate the outer product of vectors.

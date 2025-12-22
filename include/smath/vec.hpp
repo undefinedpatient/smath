@@ -66,7 +66,7 @@ class Vec {
     /**
      * @return String representation of vector
      */
-    constexpr std::string toString() const {
+    constexpr std::string to_string() const {
         std::string str = "Vec" + std::to_string(N) + "<";
         for (unsigned int i = 0; i < N; i++) {
             str += std::to_string(data[i]);
@@ -278,52 +278,52 @@ class Vec {
     /***************************************
             Relational Operators
     ****************************************/
-    friend Vec<N, bool> operator==(const Vec<N, T> &a, const Vec<N, T> &b) {
-        Vec<N, bool> result{};
+    friend Vec<N, unsigned int> operator==(const Vec<N, T> &a, const Vec<N, T> &b) {
+        Vec<N, unsigned int> result{};
         for (unsigned int i = 0; i < N; i++) {
-            result[i] = (a[i] == b[i]) ? true : false;
+            result[i] = (a[i] == b[i]) ? 1 : 0;
         }
         return result;
     }
-    friend Vec<N, bool> operator!=(const Vec<N, T> &a, const Vec<N, T> &b) {
-        Vec<N, bool> result{};
+    friend Vec<N, unsigned int> operator!=(const Vec<N, T> &a, const Vec<N, T> &b) {
+        Vec<N, unsigned int> result{};
         for (unsigned int i = 0; i < N; i++) {
-            result[i] = (a[i] != b[i]) ? true : false;
+            result[i] = (a[i] != b[i]) ? 1 : 0;
         }
         return result;
     }
-    friend Vec<N, bool> operator<(const Vec<N, T> &a, const Vec<N, T> &b) {
-        Vec<N, bool> result{};
+    friend Vec<N, unsigned int> operator<(const Vec<N, T> &a, const Vec<N, T> &b) {
+        Vec<N, unsigned int> result{};
         for (unsigned int i = 0; i < N; i++) {
-            result[i] = (a[i] < b[i]) ? true : false;
+            result[i] = (a[i] < b[i]) ? 1 : 0;
         }
         return result;
     }
-    friend Vec<N, bool> operator>(const Vec<N, T> &a, const Vec<N, T> &b) {
-        Vec<N, bool> result{};
+    friend Vec<N, unsigned int> operator>(const Vec<N, T> &a, const Vec<N, T> &b) {
+        Vec<N, unsigned int> result{};
         for (unsigned int i = 0; i < N; i++) {
-            result[i] = (a[i] > b[i]) ? true : false;
+            result[i] = (a[i] > b[i]) ? 1 : 0;
         }
         return result;
     }
-    friend Vec<N, bool> operator<=(const Vec<N, T> &a, const Vec<N, T> &b) {
-        Vec<N, bool> result{};
+    friend Vec<N, unsigned int> operator<=(const Vec<N, T> &a, const Vec<N, T> &b) {
+        Vec<N, unsigned int> result{};
         for (unsigned int i = 0; i < N; i++) {
-            result[i] = (a[i] <= b[i]) ? true : false;
+            result[i] = (a[i] <= b[i]) ? 1 : 0;
         }
         return result;
     }
-    friend Vec<N, bool> operator>=(const Vec<N, T> &a, const Vec<N, T> &b) {
-        Vec<N, bool> result{};
+    friend Vec<N, unsigned int> operator>=(const Vec<N, T> &a, const Vec<N, T> &b) {
+        Vec<N, unsigned int> result{};
         for (unsigned int i = 0; i < N; i++) {
-            result[i] = (a[i] >= b[i]) ? true : false;
+            result[i] = (a[i] >= b[i]) ? 1 : 0;
         }
         return result;
     }
     friend bool operator!(const Vec<N, T> &a) {
-        Vec<N, bool> result{};
+        Vec<N, unsigned int> result{};
         for (unsigned int i = 0; i < N; i++) {
-            result[i] = (a[i]) ? true : false;
+            result[i] = (a[i]) ? 1 : 0;
         }
         return result;
     }
@@ -339,10 +339,15 @@ class Vec {
         return o;
     }
 };
-
+using Vec2u = Vec<2, unsigned int>;
+using Vec2f = Vec<2, float>;
+using Vec2d = Vec<2, double>;
+using Vec2b = Vec<2, bool>;
+using Vec3u = Vec<3, unsigned int>;
 using Vec3f = Vec<3, float>;
 using Vec3d = Vec<3, double>;
 using Vec3b = Vec<3, bool>;
+using Vec4u = Vec<4, unsigned int>;
 using Vec4f = Vec<4, float>;
 using Vec4d = Vec<4, double>;
 using Vec4b = Vec<4, bool>;

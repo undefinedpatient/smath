@@ -1,8 +1,7 @@
 #ifndef SMATH_COMMON_HPP
 #define SMATH_COMMON_HPP
 
-#include "smath/mat.hpp"
-#include "smath/vec.hpp"
+#include "smath/quat.hpp"
 #include <concepts>
 #include <type_traits>
 #define PI 3.141592653589793d
