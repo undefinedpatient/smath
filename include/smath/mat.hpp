@@ -1,7 +1,7 @@
 #ifndef SMATH_MAT_HPP
 #define SMATH_MAT_HPP
 
-#include "smath/vec.hpp"
+#include "vec.hpp"
 #include <cmath>
 #include <concepts>
 #include <cstring>
@@ -633,6 +633,31 @@ Mat<3,3,T> euler_z(const T& radian) {
         1 ,0 ,0,
         0, cos(radian), sin(radian),
         0, -sin(radian), cos(radian)
+    };
+}
+/**
+ * @brief Short-cut for constructing translation matrix for 2D space.
+ */
+template <class T>
+    requires (std::is_arithmetic_v<T>)
+Mat<3,3,T> translation_2D(const T& x, const T& y) {
+    return Mat<3,3,T>{
+        1,0,0,
+        0,1,0,
+        x,y,1,
+    };
+}
+/**
+ * @brief Short-cut for constructing translation matrix for 3D space.
+ */
+template <class T>
+    requires (std::is_arithmetic_v<T>)
+Mat<4,4,T> translation_3D(const T& x, const T& y, const T& z) {
+    return Mat<4,4,T>{
+        1,0,0,0,
+        0,1,0,0,
+        0,0,1,0,
+        x,y,z,1
     };
 }
 

@@ -1,7 +1,7 @@
 #ifndef SMATH_QUAT_HPP
 #define SMATH_QUAT_HPP
 
-#include "smath/mat.hpp"
+#include "mat.hpp"
 #include <cmath>
 #include <concepts>
 #include <string>
@@ -256,6 +256,62 @@ class Quat {
         return *this;
     };
 
+    /***************************************
+            Relational Operators
+    ****************************************/
+    friend Quat<unsigned int> operator==(const Quat<T> &a, const Quat<T> &b) {
+        Quat<unsigned int> result{};
+        for (unsigned int i = 0; i <4; i++) {
+            result[i] = (a[i] == b[i]) ? 1 : 0;
+        }
+        return result;
+    }
+    friend Quat<unsigned int> operator!=(const Quat<T> &a, const Quat<T> &b) {
+        Quat<unsigned int> result{};
+        for (unsigned int i = 0; i <4; i++) {
+            result[i] = (a[i] != b[i]) ? 1 : 0;
+        }
+        return result;
+    }
+    friend Quat<unsigned int> operator<(const Quat<T> &a, const Quat<T> &b) {
+        Quat<unsigned int> result{};
+        for (unsigned int i = 0; i <4; i++) {
+            result[i] = (a[i] < b[i]) ? 1 : 0;
+        }
+        return result;
+    }
+    friend Quat<unsigned int> operator>(const Quat<T> &a, const Quat<T> &b) {
+        Quat<unsigned int> result{};
+        for (unsigned int i = 0; i <4; i++) {
+            result[i] = (a[i] > b[i]) ? 1 : 0;
+        }
+        return result;
+    }
+    friend Quat<unsigned int> operator<=(const Quat<T> &a, const Quat<T> &b) {
+        Quat<unsigned int> result{};
+        for (unsigned int i = 0; i <4; i++) {
+            result[i] = (a[i] <= b[i]) ? 1 : 0;
+        }
+        return result;
+    }
+    friend Quat<unsigned int> operator>=(const Quat<T> &a, const Quat<T> &b) {
+        Quat<unsigned int> result{};
+        for (unsigned int i = 0; i <4; i++) {
+            result[i] = (a[i] >= b[i]) ? 1 : 0;
+        }
+        return result;
+    }
+    friend Quat<unsigned int> operator!(const Quat<T> &a) {
+        Quat<unsigned int> result{};
+        for (unsigned int i = 0; i <4; i++) {
+            result[i] = (a[i]) ? 1 : 0;
+        }
+        return result;
+    }
+    friend std::ostream &operator<<(std::ostream &o, const Quat<T> &quat) {
+        o << quat.to_string();
+        return o;
+    }
 };
 } // namespace smath
 #endif

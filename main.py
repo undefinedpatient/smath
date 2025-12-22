@@ -30,30 +30,44 @@ class Debugger:
 # NOT IMPLEMENTED
 class Exporter:
     def __init__(self):
+        self.path: str = ""
         if not os.path.exists("./export-config.json"):
             print("export-config.json not found, creating...")
-            self.path = input("desired output path")
-            pass
-
-        with open(file="./export-config.json",mode="r") as file:
-            self.path = json.load(file)["target_dir"]
+            with open(file="./export-config.json", mode="w") as file:
+                json.dump({"target":""},fp=file)
+                print("please enter the path in the created export-config.json")
     def export(self) -> None:
-        pass
+        with open(file="./export-config.json",mode="r") as file:
+            try:
+                self.path = json.load(file)["target"]
+                # If path not found, early return
+                if len(self.path) == 0:
+                    print("Invalid Path: Empty Path.")
+                if not os.path.exists(self.path):
+                    print("Invalid Path: \033[4m"+self.path+"\033[0m")
+                    return
+                print("Selected Path: \033[4m"+self.path+"\033[0m")
+                print("Exporting...")
+                shutil.copytree(src="./include/smath/",dst=self.path+"/smath/", dirs_exist_ok=True)
+                print("Export Finished.")
+            except KeyError:
+                print("Invalid Config: Missing Field \"target\".")
 def main():
     choice:str = ""
-    print("0. Debug\n1. Export\nSelection (0): ")
-    choice = input()
+    choice = input("0. Debug\n1. Export\nSelection (0): ")
     if (choice==""):
         choice = "0"
     match choice:
         case "0":
             try:
-                print("\033[1mClean & Test\033[0m")
+                print("\033[1m\tClean & Test\033[0m")
                 Debugger().debug()
 
             except Exception as e:
                 print(e)
         case "1":
+            print("\033[1m\tExport\033[0m")
+            Exporter().export()
             pass
         case _:
             raise RuntimeError("Invalid Input")
