@@ -6,6 +6,7 @@ project(smath_dev)
 # C++ Standard
 set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Header only Library
 add_subdirectory(./include/smath)
 # add_library(smath INTERFACE)

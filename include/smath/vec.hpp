@@ -77,6 +77,12 @@ class Vec {
         return str;
     }
 
+    /**
+     * @brief Swizzling-like accessor
+     */
+    auto operator[](const unsigned int index, auto... indices) const requires(sizeof...(indices)>0){
+        return Vec<sizeof...(indices)+1, T>{(*this)[index], (*this)[indices]...};
+    }
     /***************************************
             Operations
     ****************************************/
@@ -119,10 +125,36 @@ class Vec {
         }
         return total;
     }
+    Vec<N+1,T> expand(const T& value) const {
+        Vec<N+1,T> result{};
+        std::memcpy(result->data, this->data, N*sizeof(T));
+        result[N]=value;
+        return result;
+    }
+    template <unsigned int M>
+    Vec<N+M,T> combine(const Vec<M,T> other) const {
+        Vec<N+M,T> result{};
+        std::memcpy(result->data, this->data, N*sizeof(T));
+        std::memcpy(result->data+N*sizeof(T), other.data, M*sizeof(T));
+        return result;
+    }
     /**
-     * @return Normalised Vector of the operand.
+     * @return Normalised Vector of the operand. Raise error when encounter a zero-vector
      */
-    Vec<N, T> normalise() const {
+    Vec<N, T> normalize() const {
+        Vec<N, T> temp{};
+        const T length = this->length();
+        if (length == 0)
+            throw std::logic_error("Cannot normalize a zero-vector.");
+        for (unsigned int i = 0; i < N; i++) {
+            temp[i] = (*this)[i] / length;
+        }
+        return temp;
+    }
+    /**
+     * @return Normalised Vector of the operand. Return zero-vector on zero-vector.
+     */
+    Vec<N, T> normalize_or_zero() const {
         Vec<N, T> temp{};
         const T length = this->length();
         if (length == 0)
@@ -149,7 +181,7 @@ class Vec {
      * @return Rotation on input axis by input radian.
      */
     Vec<3, T> rotate(const T &radian, const Vec<3, T> axis = {0, 0, 1}) const requires (N==3) {
-        Vec<3, T> n = axis.normalise();
+        Vec<3, T> n = axis.normalize();
 
         return (1 - std::cos(radian)) * (n.dot((*this)) * (n)) +
                std::cos(radian) * (*this) + std::sin(radian) * (this->cross(n));
