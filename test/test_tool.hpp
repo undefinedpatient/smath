@@ -90,10 +90,18 @@ class TestRunner {
                 num_failed++;
             }
         }
-        print_message('=', std::to_string(test_cases.size() - num_failed) +
-                               "/" + std::to_string(this->test_cases.size()) +
-                               " Passed | " + std::to_string(time_count) +
-                               " \u00B5s ");
+        if(time_count<1000){
+            print_message('=', std::to_string(test_cases.size() - num_failed) +
+                                "/" + std::to_string(this->test_cases.size()) +
+                                " Passed | " + std::to_string(time_count) +
+                                " \u00B5s ");
+        }else{
+
+            print_message('=', std::to_string(test_cases.size() - num_failed) +
+                                "/" + std::to_string(this->test_cases.size()) +
+                                " Passed | " + std::to_string(time_count/1000) +
+                                " ms ");
+        }
         return num_failed ? EXIT_FAILURE : EXIT_SUCCESS;
     }
 };

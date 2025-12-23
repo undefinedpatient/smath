@@ -23,6 +23,9 @@ if(SMATH_BUILD_TESTS)
           ${TEST_SOURCE}
           test/test_tool.hpp
         )
+        if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+            target_compile_options(${TEST_NAME} PRIVATE -march=native -O0)
+        endif()
         target_link_libraries(${TEST_NAME} PRIVATE smath)
         add_test(NAME ${TEST_NAME}_unit COMMAND ${TEST_NAME})
     endforeach()

@@ -8,6 +8,7 @@ project(smath)
 set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_STANDARD_REQURIED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Header only Library
 add_library(smath INTERFACE)
 target_include_directories(smath INTERFACE .)

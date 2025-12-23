@@ -24,6 +24,11 @@ class Vec {
     template <class... Us>
         requires(sizeof...(Us) == N && (std::convertible_to<Us, T> && ...))
     Vec(Us... args) : data{static_cast<T>(args)...} {}
+    Vec(T value) {
+        for(unsigned int i = 0; i< N; i++){
+            data[i] = value;
+        }
+    }
     explicit Vec(const T *arr) {
         // for (unsigned int i = 0; i < N; i++) {
         //     this->data[i] = arr[i];

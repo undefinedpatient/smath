@@ -20,7 +20,7 @@ class Debugger:
         os.mkdir("./build/")
         # "-B" specify the output directory
         subprocess.run(args = ["cmake", "-B", "./build/"])
-        subprocess.run(args = ["cmake", "--build", "./build/", "--config", "Debug"])
+        subprocess.run(args = ["cmake", "--build", "./build/"])
         if int(choice) >= len(self.tests):
             subprocess.run(args= ["ctest", "-V"], cwd="./build/", text=True)
         else: 
