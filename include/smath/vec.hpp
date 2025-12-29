@@ -146,7 +146,7 @@ class Vec {
     /**
      * @return Normalised Vector of the operand. Raise error when encounter a zero-vector
      */
-    Vec<N, T> normalize() const {
+    Vec<N, T> normalise() const {
         Vec<N, T> temp{};
         const T length = this->length();
         if (length == 0)
@@ -159,7 +159,7 @@ class Vec {
     /**
      * @return Normalised Vector of the operand. Return zero-vector on zero-vector.
      */
-    Vec<N, T> normalize_or_zero() const {
+    Vec<N, T> normalise_or_zero() const {
         Vec<N, T> temp{};
         const T length = this->length();
         if (length == 0)
@@ -186,7 +186,7 @@ class Vec {
      * @return Rotation on input axis by input radian.
      */
     Vec<3, T> rotate(const T &radian, const Vec<3, T> axis = {0, 0, 1}) const requires (N==3) {
-        Vec<3, T> n = axis.normalize();
+        Vec<3, T> n = axis.normalise();
 
         return (1 - std::cos(radian)) * (n.dot((*this)) * (n)) +
                std::cos(radian) * (*this) + std::sin(radian) * (this->cross(n));

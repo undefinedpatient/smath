@@ -29,10 +29,10 @@ TEST(VEC_SWIZZLING_TEST){
     assert_equal(a1,b1);
     assert_equal(a2,b2);
 }
-TEST(VEC_NORMALIZE_TEST) {
-    assert_equal(Vec3f(0, 0, 0).normalize_or_zero(), Vec3f(0, 0, 0)); // zero vector stays zero
-    assert_close(Vec3f(3, 4, 0).normalize_or_zero().length(), 1.0f, 0.0001f);
-    assert_close(Vec3f(1, 1, 1).normalize_or_zero().length(), 1.0f, 0.0001f);
+TEST(VEC_NORMALISE_TEST) {
+    assert_equal(Vec3f(0, 0, 0).normalise_or_zero(), Vec3f(0, 0, 0)); // zero vector stays zero
+    assert_close(Vec3f(3, 4, 0).normalise_or_zero().length(), 1.0f, 0.0001f);
+    assert_close(Vec3f(1, 1, 1).normalise_or_zero().length(), 1.0f, 0.0001f);
 }
 
 TEST(VEC_DOT_PRODUCT_TEST) {

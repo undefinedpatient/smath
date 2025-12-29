@@ -272,103 +272,103 @@ class Mat {
         }
         return result;
     }
-    /**
-     * @brief 2D translation for 3x3 homogeneous matrix
-     */
-    // template <typename U = T>
-    //     requires(M == 3 && N == 3)
-    Mat<3, 3, T> translate(const Vec<2, T> vec2) const requires (M==3&&N==3){
-        const Mat<3, 3, T> translation = {1, 0,       0,       0, 1,
-                                          0, vec2[0], vec2[1], 1};
-        return translation.cross(*this);
-    }
+    // /**
+    //  * @brief 2D translation for 3x3 homogeneous matrix
+    //  */
+    // // template <typename U = T>
+    // //     requires(M == 3 && N == 3)
+    // Mat<3, 3, T> translate(const Vec<2, T> vec2) const requires (M==3&&N==3){
+    //     const Mat<3, 3, T> translation = {1, 0,       0,       0, 1,
+    //                                       0, vec2[0], vec2[1], 1};
+    //     return translation.cross(*this);
+    // }
 
-    /**
-     * @brief 3D translation for 4x4 homogeneous matrix
-     */
-    // template <typename U = T>
-    //     requires(M == 4 && N == 4)
-    Mat<4, 4, T> translate(const Vec<3, T> vec3) const requires (M==4&&N==3){
-        const Mat<4, 4, T> translation = {
-            1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, vec3[0], vec3[1], vec3[2], 1};
-        return translation.cross(*this);
-    }
+    // /**
+    //  * @brief 3D translation for 4x4 homogeneous matrix
+    //  */
+    // // template <typename U = T>
+    // //     requires(M == 4 && N == 4)
+    // Mat<4, 4, T> translate(const Vec<3, T> vec3) const requires (M==4&&N==4){
+    //     const Mat<4, 4, T> translation = {
+    //         1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, vec3[0], vec3[1], vec3[2], 1};
+    //     return translation.cross(*this);
+    // }
 
-    /**
-     * @brief 2D rotation on 2x2 matrix
-     */
-    // template <typename U = T>
-    //     requires(M == 2 && N == 2)
-    Mat<2, 2, T> rotate(const T &radian) const requires (M==2&&N==2){
-        return Mat<2, 2, T>(std::cos(radian), std::sin(radian),
-                            -std::sin(radian), std::cos(radian)).cross(*this);
-    }
-    /**
-     * @brief 2D rotation on 3x3 homogeneous matrix
-     */
-    // template <typename U = T>
-    //     requires(M == 3 && N == 3)
-    Mat<3, 3, T> rotate(const T &radian) const requires (M==3&&N==3){
-        return Mat<3, 3, T>(std::cos(radian), std::sin(radian),0,
-                            -std::sin(radian), std::cos(radian),0,
-                            0,0,1).cross(*this);
-    }
-    /**
-     * @brief 3D rotation on 3x3 matrix
-     */
-    // template <typename U = T>
-    //     requires(M == 3 && N == 3)
-    Mat<3, 3, T> rotate(const T &radian,
-                        const Vec<3, T> &axis = {1, 0, 0}) const requires (M==3&&N==3){
-        const auto unit = axis.normalise();
-        using namespace std;
-        Mat<3, 3, T> rotation = {
-            (unit[0] * unit[0])(1 - cos(radian)) + cos(radian),
-            (unit[0] * unit[1])(1 - cos(radian)) + unit[2] * sin(radian),
-            (unit[0] * unit[2])(1 - cos(radian)) - unit[1] * sin(radian),
+    // /**
+    //  * @brief 2D rotation on 2x2 matrix
+    //  */
+    // // template <typename U = T>
+    // //     requires(M == 2 && N == 2)
+    // Mat<2, 2, T> rotate(const T &radian) const requires (M==2&&N==2){
+    //     return Mat<2, 2, T>(std::cos(radian), std::sin(radian),
+    //                         -std::sin(radian), std::cos(radian)).cross(*this);
+    // }
+    // /**
+    //  * @brief 2D rotation on 3x3 homogeneous matrix
+    //  */
+    // // template <typename U = T>
+    // //     requires(M == 3 && N == 3)
+    // Mat<3, 3, T> rotate(const T &radian) const requires (M==3&&N==3){
+    //     return Mat<3, 3, T>(std::cos(radian), std::sin(radian),0,
+    //                         -std::sin(radian), std::cos(radian),0,
+    //                         0,0,1).cross(*this);
+    // }
+    // /**
+    //  * @brief 3D rotation on 3x3 matrix
+    //  */
+    // // template <typename U = T>
+    // //     requires(M == 3 && N == 3)
+    // Mat<3, 3, T> rotate(const T &radian,
+    //                     const Vec<3, T> &axis = {1, 0, 0}) const requires (M==3&&N==3){
+    //     const auto unit = axis.normalise();
+    //     using namespace std;
+    //     Mat<3, 3, T> rotation = {
+    //         (unit[0] * unit[0])*(1 - cos(radian)) + cos(radian),
+    //         (unit[0] * unit[1])*(1 - cos(radian)) + unit[2] * sin(radian),
+    //         (unit[0] * unit[2])*(1 - cos(radian)) - unit[1] * sin(radian),
 
-            (unit[0] * unit[1])(1 - cos(radian)) - unit[2] * sin(radian),
-            (unit[1] * unit[1])(1 - cos(radian)) + cos(radian),
-            (unit[1] * unit[2])(1 - cos(radian)) + unit[0] * sin(radian),
+    //         (unit[0] * unit[1])*(1 - cos(radian)) - unit[2] * sin(radian),
+    //         (unit[1] * unit[1])*(1 - cos(radian)) + cos(radian),
+    //         (unit[1] * unit[2])*(1 - cos(radian)) + unit[0] * sin(radian),
 
-            (unit[0] * unit[2])(1 - cos(radian)) + unit[1] * sin(radian),
-            (unit[1] * unit[2])(1 - cos(radian)) - unit[0] * sin(radian),
-            (unit[2] * unit[2])(1 - cos(radian)) + cos(radian),
-        };
-        return rotation * (*this);
-    }
+    //         (unit[0] * unit[2])*(1 - cos(radian)) + unit[1] * sin(radian),
+    //         (unit[1] * unit[2])*(1 - cos(radian)) - unit[0] * sin(radian),
+    //         (unit[2] * unit[2])*(1 - cos(radian)) + cos(radian),
+    //     };
+    //     return rotation * (*this);
+    // }
 
-    /**
-     * @brief 3D rotation on 4x4 homogeneous matrix
-     */
-    // template <typename U = T>
-    //     requires(M == 4 && N == 4)
-    Mat<4, 4, T> rotate(const T &radian, const Vec<4, T> &axis = {1, 0, 0},
-                        Vec<3, T> pivot = {0, 0, 0}) const requires (M==4&&N==4){
-        const auto unit = axis.normalise();
-        using namespace std;
-        Mat<4, 4, T> rotation = {
-            (unit[0] * unit[0])(1 - cos(radian)) + cos(radian),
-            (unit[0] * unit[1])(1 - cos(radian)) + unit[2] * sin(radian),
-            (unit[0] * unit[2])(1 - cos(radian)) - unit[1] * sin(radian),
-            0,
+    // /**
+    //  * @brief 3D rotation on 4x4 homogeneous matrix
+    //  */
+    // // template <typename U = T>
+    // //     requires(M == 4 && N == 4)
+    // Mat<4, 4, T> rotate(const T &radian, const Vec<3, T> &axis = {1, 0, 0},
+    //                     Vec<3, T> pivot = {0, 0, 0}) const requires (M==4&&N==4){
+    //     const auto unit = axis.normalise();
+    //     using namespace std;
+    //     Mat<4, 4, T> rotation = {
+    //         (unit[0] * unit[0])*(1 - cos(radian)) + cos(radian),
+    //         (unit[0] * unit[1])*(1 - cos(radian)) + unit[2] * sin(radian),
+    //         (unit[0] * unit[2])*(1 - cos(radian)) - unit[1] * sin(radian),
+    //         0,
 
-            (unit[0] * unit[1])(1 - cos(radian)) - unit[2] * sin(radian),
-            (unit[1] * unit[1])(1 - cos(radian)) + cos(radian),
-            (unit[1] * unit[2])(1 - cos(radian)) + unit[0] * sin(radian),
-            0,
+    //         (unit[0] * unit[1])*(1 - cos(radian)) - unit[2] * sin(radian),
+    //         (unit[1] * unit[1])*(1 - cos(radian)) + cos(radian),
+    //         (unit[1] * unit[2])*(1 - cos(radian)) + unit[0] * sin(radian),
+    //         0,
 
-            (unit[0] * unit[2])(1 - cos(radian)) + unit[1] * sin(radian),
-            (unit[1] * unit[2])(1 - cos(radian)) - unit[0] * sin(radian),
-            (unit[2] * unit[2])(1 - cos(radian)) + cos(radian),
-            0,
+    //         (unit[0] * unit[2])*(1 - cos(radian)) + unit[1] * sin(radian),
+    //         (unit[1] * unit[2])*(1 - cos(radian)) - unit[0] * sin(radian),
+    //         (unit[2] * unit[2])*(1 - cos(radian)) + cos(radian),
+    //         0,
 
-            0,
-            0,
-            0,
-            1};
-        return (rotation * (*this).translate(-pivot)).translate(pivot);
-    }
+    //         0,
+    //         0,
+    //         0,
+    //         1};
+    //     return (rotation * (*this).translate(-pivot)).translate(pivot);
+    // }
 
     /**
      * @brief Custom boolean casting for vector. This require the element in the Vec to be able to convert to bool.
@@ -597,20 +597,20 @@ Mat<2,2,T> euler(const T& radian) {
     return Mat<2,2,T>{cos(radian), sin(radian), -sin(radian), cos(radian)};
 }
 /**
- * @brief Short-cut for 3D euler rotation on x-axis.
+ * @brief Short-cut for 3D euler rotation about x-axis.
  */
 template <class T>
     requires (std::is_arithmetic_v<T>)
 Mat<3,3,T> euler_x(const T& radian) {
     using namespace std;
     return Mat<3,3,T>{
-        cos(radian), sin(radian), 0,
-        -sin(radian), cos(radian), 0,
-        0 ,0 ,1
+        1 ,0 ,0,
+        0, cos(radian), sin(radian),
+        0, -sin(radian), cos(radian)
     };
 }
 /**
- * @brief Short-cut for 3D euler rotation on y-axis.
+ * @brief Short-cut for 3D euler rotation about y-axis.
  */
 template <class T>
     requires (std::is_arithmetic_v<T>)
@@ -623,16 +623,16 @@ Mat<3,3,T> euler_y(const T& radian) {
     };
 }
 /**
- * @brief Short-cut for 3D euler rotation on z-axis.
+ * @brief Short-cut for 3D euler rotation about z-axis.
  */
 template <class T>
     requires (std::is_arithmetic_v<T>)
 Mat<3,3,T> euler_z(const T& radian) {
     using namespace std;
     return Mat<3,3,T>{
-        1 ,0 ,0,
-        0, cos(radian), sin(radian),
-        0, -sin(radian), cos(radian)
+        cos(radian), sin(radian), 0,
+        -sin(radian), cos(radian), 0,
+        0 ,0 ,1
     };
 }
 /**
@@ -672,15 +672,23 @@ Mat<N, N, T> outer_product(const Vec<N, T> left, const Vec<N, T> right) {
 }
 
 template <class T>
+/**
+ * @return Essentially Generate View matrix.
+ */
 Mat<4, 4, T> look_at(const Vec<3, T> &eye, const Vec<3, T> &target,
                      const Vec<3, T> &up) {
-    const Vec<3, T> forward = static_cast<Vec<3, T>>(target - eye).normalise();
-    const Vec<3, T> right = forward.cross(up.normalise());
+    const Vec<3, T> forward = (target - eye).normalise_or_zero();
+    const Vec<3, T> right = forward.cross(up.normalise_or_zero()).normalise_or_zero();
     const Vec<3, T> true_up = right.cross(forward);
-
+    const T tx = -right.dot(eye);
+    const T ty = -true_up.dot(eye);
+    const T tz = forward.dot(eye);
     return Mat<4, 4, T>{
-        right[0],   right[1],   right[2],   0, up[0], up[1], up[2], 0,
-        forward[0], forward[1], forward[2], 0, 0,     0,     0,     1};
+        right[0],true_up[0],-forward[0],0,
+        right[1],true_up[1],-forward[1],0,
+        right[2],true_up[2],-forward[2],0,
+        tx,ty,tz,1
+    };
 }
 
 /**
@@ -692,8 +700,6 @@ template <class T>
     requires (std::is_arithmetic<T>::value)
 Mat<4, 4, T> perspective(const T &aspect_ratio, const T &fov, const T &near,
                          const T &far) {
-    const T n = -near;
-    const T f = -far;
     return Mat<4, 4, T>{1 / (aspect_ratio * std::tan(fov / 2)),
                         0,
                         0,
@@ -704,11 +710,12 @@ Mat<4, 4, T> perspective(const T &aspect_ratio, const T &fov, const T &near,
                         0,
                         0,
                         0,
-                        (f + n) / (n - f),
-                        1,
+                        - (far + near) / (far - near),
+                        -1,
                         0,
                         0,
-                        -(2 * f * n) / (n - f)};
+                        - (2 * far * near) / (far - near),
+                        0};
 }
 /**
  * @brief This is a alternative function generating the perspective projection matrix based
@@ -718,13 +725,11 @@ Mat<4, 4, T> perspective(const T &aspect_ratio, const T &fov, const T &near,
 template <class T>
 Mat<4, 4, T> perspective(const T &left, const T &right, const T &top,
                          const T &bottom, const T &near, const T &far) {
-    const T n = -near;
-    const T f = -far;
     return Mat<4,4,T>{
-        (2*n)/(right-left),0,0,0,
-        0,(2*n)/(top-bottom),0,0,
-        -((right+left)/(right-left)),-((top+bottom)/(top-bottom)),2*((f+n)/(n-f)),1,
-        0,0,-((2*f*n)/(n-f)),0
+        (2*near)/(right-left),0,0,0,
+        0,(2*near)/(top-bottom),0,0,
+        -((right+left)/(right-left)),-((top+bottom)/(top-bottom)),2*((far+near)/(near-far)),-1,
+        0,0,-((2*far*near)/(far-near)),0
     };
 }
 /**
@@ -735,8 +740,6 @@ Mat<4, 4, T> perspective(const T &left, const T &right, const T &top,
 template <class T>
 Mat<4, 4, T> orthgraphic(const T &left, const T &right, const T &top,
                          const T &bottom, const T &near, const T &far) {
-    const T n = -near;
-    const T f = -far;
     return Mat<4, 4, T>{2 / (right - left),
                         0,
                         0,
@@ -747,11 +750,11 @@ Mat<4, 4, T> orthgraphic(const T &left, const T &right, const T &top,
                         0,
                         0,
                         0,
-                        2 / (n- f),
+                        - 2 / (far-near),
                         0,
                         -(left + right) / (right - left),
                         -(top + bottom) / (top - bottom),
-                        -(n+ f) / (n- f),
+                        -(far+near) / (far-near),
                         1};
 };
 

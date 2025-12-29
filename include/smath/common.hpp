@@ -4,7 +4,7 @@
 #include "quat.hpp"
 #include <concepts>
 #include <type_traits>
-#define PI 3.141592653589793d
+#define PI 3.141592653589793
 
 // template <unsigned int N, typename T> class Vec;
 // template <unsigned int M, unsigned int N, typename T> class Mat;
@@ -12,13 +12,13 @@ namespace smath {
 template <class T>
     requires std::is_arithmetic_v<T> && std::convertible_to<double, T>
 constexpr T to_radian(T degree) {
-    return static_cast<T>(degree * (PI / 180.0d));
+    return static_cast<T>(degree * (PI / 180.0));
 }
 
 template <class T>
     requires std::is_arithmetic_v<T> && std::convertible_to<double, T>
 constexpr T to_degree(T radian) {
-    return static_cast<T>(radian / (PI / 180.0d));
+    return static_cast<T>(radian / (PI / 180.0));
 }
 
 /***************************************
