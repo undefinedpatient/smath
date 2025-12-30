@@ -51,6 +51,18 @@ class Quat {
         return data[i];
     }
     /**
+     * @return scalar components
+     */
+    const T scalar() const {
+        return data[0];
+    }
+    /**
+     * @return imaginary components
+     */
+    const Vec<3,T> vector() const {
+        return Vec<3,T>{data[1], data[2], data[3]};
+    }
+    /**
      * @return String representation of Quaternion
      */
     constexpr std::string to_string() const {
@@ -79,12 +91,26 @@ class Quat {
     /***************************************
            Operations
     ****************************************/
+    Quat<T> mul(const Quat<T> &other) const{
+        return Quat<T>{
+            data[0]*other[0]-data[1]*other[1]-data[2]*other[2]-data[3]*other[3],
+            data[0]*other[1]+data[1]*other[0]+data[2]*other[3]-data[3]*other[2],
+            data[0]*other[2]+data[2]*other[0]+data[3]*other[1]-data[1]*other[3],
+            data[0]*other[3]+data[3]*other[0]+data[1]*other[2]-data[2]*other[1]
+        };
+    }
+    T dot(const Quat<T> &other) const{
+        return data[0]*other[0]+data[1]*other[1]+data[2]*other[2]+data[3]*other[3];
+    }
     Quat<T> conjugate() const {
         return Quat{data[0], -data[1], -data[2], -data[3]};
     }
+    Quat<T> normalize() const {
+        T divisor = norm2();
+        return (*this)/divisor;
+    }
     T norm() const {
-        return std::sqrt(data[0] * data[0] + data[1] * data[1] +
-                         data[2] * data[2] + data[3] * data[3]);
+        return std::sqrt(norm2());
     }
     T norm2() const {
         return data[0] * data[0] + data[1] * data[1] + data[2] * data[2] +
@@ -313,5 +339,11 @@ class Quat {
         return o;
     }
 };
+template<class T>
+Quat<T> slerp(const Quat<T> &a, const Quat<T> &b, const T& t){
+    using namespace std;
+    const T angle = acos(a.dot(b))/2;
+    return a*(sin((1-t)*angle)/sin(angle))+b*(sin(t*angle)/sin(angle));
+}
 } // namespace smath
 #endif
