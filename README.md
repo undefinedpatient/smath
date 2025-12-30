@@ -1,8 +1,9 @@
-# SMath - A Simple C++ Math Library
+# smath - A Simple C++ Math Library
 
 > ## Vector (Up to 16)
 > Supported Operations
 > - Length / Length2
+> - Normalize / Normalize or Zero
 > - Inner product / Outer product
 > - Cross product
 > - Element wise operations
@@ -19,7 +20,9 @@
 > - Transpose
 > - Invert/Adjoint Matrix
 > - Matrices Multiplication
-> - Perspective Matrix
+> - Projection Matrices
+> - View Matrices
+> - Rotation on arbitrary axis
 
 > ## Quaternion
 > Supported Operations
@@ -27,6 +30,6 @@
 > - from_mat4() / to_mat4()
 > - conjugate
 
-For coordinate system relevant computation (projection matrix), they are all based on `right-handed y-up` system.
+For coordinate system relevant computation (projection matrix), they are all based on `right-handed y-up` system, assuming camera is looking at the direction -z.
 
 

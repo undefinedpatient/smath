@@ -146,12 +146,12 @@ class Mat {
         return result;
     }
 
-    Vec<M,T> cross(const Vec<M,T>& other) const {
-        Vec<M,T> result{};
-        for (unsigned int m = 0; m < M; m++){
+    Vec<M, T> cross(const Vec<M, T> &other) const {
+        Vec<M, T> result{};
+        for (unsigned int m = 0; m < M; m++) {
             T temp = 0;
-            for (unsigned int n = 0; n < N; n++){
-                temp += (*this)[n*M+m]*result[n];
+            for (unsigned int n = 0; n < N; n++) {
+                temp += (*this)[n * M + m] * result[n];
             }
             result[m] = temp;
         }
@@ -217,12 +217,14 @@ class Mat {
         }
         return sub_matrix;
     }
-    Mat<4,4,T> to_homogeneous() const requires (M==3&&N==3){
-        Mat<4,4,T> result{};
-        for(unsigned int m = 0; m < 3; m++){
-            for(unsigned int n = 0; n < 3; n++){
+    Mat<4, 4, T> to_homogeneous() const
+        requires(M == 3 && N == 3)
+    {
+        Mat<4, 4, T> result{};
+        for (unsigned int m = 0; m < 3; m++) {
+            for (unsigned int n = 0; n < 3; n++) {
 
-                result[m*4+n] = data[m*M+n];
+                result[m * 4 + n] = data[m * M + n];
             }
         }
         result[15] = static_cast<T>(1.0f);
@@ -265,86 +267,23 @@ class Mat {
     /**
      * @brief Compute the sum along the matrix diagonal.
      */
-    T trace() const requires (M==N){
+    T trace() const
+        requires(M == N)
+    {
         T result = static_cast<T>(0.0f);
-        for (unsigned int i = 0; i< N; i++){
-            result += data[i*M+i];
+        for (unsigned int i = 0; i < N; i++) {
+            result += data[i * M + i];
         }
         return result;
     }
-    // /**
-    //  * @brief 2D translation for 3x3 homogeneous matrix
-    //  */
-    // // template <typename U = T>
-    // //     requires(M == 3 && N == 3)
-    // Mat<3, 3, T> translate(const Vec<2, T> vec2) const requires (M==3&&N==3){
-    //     const Mat<3, 3, T> translation = {1, 0,       0,       0, 1,
-    //                                       0, vec2[0], vec2[1], 1};
-    //     return translation.cross(*this);
-    // }
-
-    // /**
-    //  * @brief 3D translation for 4x4 homogeneous matrix
-    //  */
-    // // template <typename U = T>
-    // //     requires(M == 4 && N == 4)
-    // Mat<4, 4, T> translate(const Vec<3, T> vec3) const requires (M==4&&N==4){
-    //     const Mat<4, 4, T> translation = {
-    //         1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, vec3[0], vec3[1], vec3[2], 1};
-    //     return translation.cross(*this);
-    // }
-
-    // /**
-    //  * @brief 2D rotation on 2x2 matrix
-    //  */
-    // // template <typename U = T>
-    // //     requires(M == 2 && N == 2)
-    // Mat<2, 2, T> rotate(const T &radian) const requires (M==2&&N==2){
-    //     return Mat<2, 2, T>(std::cos(radian), std::sin(radian),
-    //                         -std::sin(radian), std::cos(radian)).cross(*this);
-    // }
-    // /**
-    //  * @brief 2D rotation on 3x3 homogeneous matrix
-    //  */
-    // // template <typename U = T>
-    // //     requires(M == 3 && N == 3)
-    // Mat<3, 3, T> rotate(const T &radian) const requires (M==3&&N==3){
-    //     return Mat<3, 3, T>(std::cos(radian), std::sin(radian),0,
-    //                         -std::sin(radian), std::cos(radian),0,
-    //                         0,0,1).cross(*this);
-    // }
-    // /**
-    //  * @brief 3D rotation on 3x3 matrix
-    //  */
-    // // template <typename U = T>
-    // //     requires(M == 3 && N == 3)
-    // Mat<3, 3, T> rotate(const T &radian,
-    //                     const Vec<3, T> &axis = {1, 0, 0}) const requires (M==3&&N==3){
-    //     const auto unit = axis.normalise();
-    //     using namespace std;
-    //     Mat<3, 3, T> rotation = {
-    //         (unit[0] * unit[0])*(1 - cos(radian)) + cos(radian),
-    //         (unit[0] * unit[1])*(1 - cos(radian)) + unit[2] * sin(radian),
-    //         (unit[0] * unit[2])*(1 - cos(radian)) - unit[1] * sin(radian),
-
-    //         (unit[0] * unit[1])*(1 - cos(radian)) - unit[2] * sin(radian),
-    //         (unit[1] * unit[1])*(1 - cos(radian)) + cos(radian),
-    //         (unit[1] * unit[2])*(1 - cos(radian)) + unit[0] * sin(radian),
-
-    //         (unit[0] * unit[2])*(1 - cos(radian)) + unit[1] * sin(radian),
-    //         (unit[1] * unit[2])*(1 - cos(radian)) - unit[0] * sin(radian),
-    //         (unit[2] * unit[2])*(1 - cos(radian)) + cos(radian),
-    //     };
-    //     return rotation * (*this);
-    // }
-
     // /**
     //  * @brief 3D rotation on 4x4 homogeneous matrix
     //  */
     // // template <typename U = T>
     // //     requires(M == 4 && N == 4)
     // Mat<4, 4, T> rotate(const T &radian, const Vec<3, T> &axis = {1, 0, 0},
-    //                     Vec<3, T> pivot = {0, 0, 0}) const requires (M==4&&N==4){
+    //                     Vec<3, T> pivot = {0, 0, 0}) const requires
+    //                     (M==4&&N==4){
     //     const auto unit = axis.normalise();
     //     using namespace std;
     //     Mat<4, 4, T> rotation = {
@@ -371,11 +310,12 @@ class Mat {
     // }
 
     /**
-     * @brief Custom boolean casting for vector. This require the element in the Vec to be able to convert to bool.
+     * @brief Custom boolean casting for vector. This require the element in the
+     * Vec to be able to convert to bool.
      * @return True if and only if all vector elements are True.
      */
     explicit operator bool() const {
-        for (unsigned int i = 0; i < N*M; i++) {
+        for (unsigned int i = 0; i < N * M; i++) {
             if (!(*this)[i])
                 return false;
         }
@@ -521,51 +461,57 @@ class Mat {
     /***************************************
             Relational Operators
     ****************************************/
-    friend Mat<M,N,unsigned int> operator==(const Mat<M,N,T> &a, const Mat<M,N,T> &b) {
-        Mat<M,N,unsigned int> result{};
-        for (unsigned int i = 0; i <M*N; i++) {
+    friend Mat<M, N, unsigned int> operator==(const Mat<M, N, T> &a,
+                                              const Mat<M, N, T> &b) {
+        Mat<M, N, unsigned int> result{};
+        for (unsigned int i = 0; i < M * N; i++) {
             result[i] = (a[i] == b[i]) ? 1 : 0;
         }
         return result;
     }
-    friend Mat<M,N,unsigned int> operator!=(const Mat<M,N,T> &a, const Mat<M,N,T> &b) {
-        Mat<M,N,unsigned int> result{};
-        for (unsigned int i = 0; i <M*N; i++) {
+    friend Mat<M, N, unsigned int> operator!=(const Mat<M, N, T> &a,
+                                              const Mat<M, N, T> &b) {
+        Mat<M, N, unsigned int> result{};
+        for (unsigned int i = 0; i < M * N; i++) {
             result[i] = (a[i] != b[i]) ? 1 : 0;
         }
         return result;
     }
-    friend Mat<M,N,unsigned int> operator<(const Mat<M,N,T> &a, const Mat<M,N,T> &b) {
-        Mat<M,N,unsigned int> result{};
-        for (unsigned int i = 0; i <M*N; i++) {
+    friend Mat<M, N, unsigned int> operator<(const Mat<M, N, T> &a,
+                                             const Mat<M, N, T> &b) {
+        Mat<M, N, unsigned int> result{};
+        for (unsigned int i = 0; i < M * N; i++) {
             result[i] = (a[i] < b[i]) ? 1 : 0;
         }
         return result;
     }
-    friend Mat<M,N,unsigned int> operator>(const Mat<M,N,T> &a, const Mat<M,N,T> &b) {
-        Mat<M,N,unsigned int> result{};
-        for (unsigned int i = 0; i <M*N; i++) {
+    friend Mat<M, N, unsigned int> operator>(const Mat<M, N, T> &a,
+                                             const Mat<M, N, T> &b) {
+        Mat<M, N, unsigned int> result{};
+        for (unsigned int i = 0; i < M * N; i++) {
             result[i] = (a[i] > b[i]) ? 1 : 0;
         }
         return result;
     }
-    friend Mat<M,N,unsigned int> operator<=(const Mat<M,N,T> &a, const Mat<M,N,T> &b) {
-        Mat<M,N,unsigned int> result{};
-        for (unsigned int i = 0; i <M*N; i++) {
+    friend Mat<M, N, unsigned int> operator<=(const Mat<M, N, T> &a,
+                                              const Mat<M, N, T> &b) {
+        Mat<M, N, unsigned int> result{};
+        for (unsigned int i = 0; i < M * N; i++) {
             result[i] = (a[i] <= b[i]) ? 1 : 0;
         }
         return result;
     }
-    friend Mat<M,N,unsigned int> operator>=(const Mat<M,N,T> &a, const Mat<M,N,T> &b) {
-        Mat<M,N,unsigned int> result{};
-        for (unsigned int i = 0; i <M*N; i++) {
+    friend Mat<M, N, unsigned int> operator>=(const Mat<M, N, T> &a,
+                                              const Mat<M, N, T> &b) {
+        Mat<M, N, unsigned int> result{};
+        for (unsigned int i = 0; i < M * N; i++) {
             result[i] = (a[i] >= b[i]) ? 1 : 0;
         }
         return result;
     }
-    friend bool operator!(const Mat<M,N,T> &a) {
-        Mat<M,N,unsigned int> result{};
-        for (unsigned int i = 0; i <M*N; i++) {
+    friend bool operator!(const Mat<M, N, T> &a) {
+        Mat<M, N, unsigned int> result{};
+        for (unsigned int i = 0; i < M * N; i++) {
             result[i] = (a[i]) ? 1 : 0;
         }
         return result;
@@ -575,10 +521,10 @@ class Mat {
         return o;
     }
 };
-using Mat4u = Mat<4,4,unsigned int>;
-using Mat3u = Mat<3,3,unsigned int>;
-using Mat2u = Mat<2,2,unsigned int>;
-using Mat1u = Mat<1,1,unsigned int>;
+using Mat4u = Mat<4, 4, unsigned int>;
+using Mat3u = Mat<3, 3, unsigned int>;
+using Mat2u = Mat<2, 2, unsigned int>;
+using Mat1u = Mat<1, 1, unsigned int>;
 using Mat4f = Mat<4, 4, float>;
 using Mat3f = Mat<3, 3, float>;
 using Mat2f = Mat<2, 2, float>;
@@ -587,80 +533,120 @@ using Mat4d = Mat<4, 4, double>;
 using Mat3d = Mat<3, 3, double>;
 using Mat2d = Mat<2, 2, double>;
 using Mat1d = Mat<1, 1, double>;
+
 /**
  * @brief Short-cut for 2D euler rotation.
  */
 template <class T>
-    requires (std::is_arithmetic_v<T>)
-Mat<2,2,T> euler(const T& radian) {
+    requires(std::is_arithmetic_v<T>)
+Mat<2, 2, T> euler(const T &radian) {
     using namespace std;
-    return Mat<2,2,T>{cos(radian), sin(radian), -sin(radian), cos(radian)};
+    return Mat<2, 2, T>{cos(radian), sin(radian), -sin(radian), cos(radian)};
 }
 /**
  * @brief Short-cut for 3D euler rotation about x-axis.
  */
 template <class T>
-    requires (std::is_arithmetic_v<T>)
-Mat<3,3,T> euler_x(const T& radian) {
+    requires(std::is_arithmetic_v<T>)
+Mat<3, 3, T> euler_x(const T &radian) {
     using namespace std;
-    return Mat<3,3,T>{
-        1 ,0 ,0,
-        0, cos(radian), sin(radian),
-        0, -sin(radian), cos(radian)
-    };
+    return Mat<3, 3, T>{
+        1, 0, 0, 0, cos(radian), sin(radian), 0, -sin(radian), cos(radian)};
 }
 /**
  * @brief Short-cut for 3D euler rotation about y-axis.
  */
 template <class T>
-    requires (std::is_arithmetic_v<T>)
-Mat<3,3,T> euler_y(const T& radian) {
+    requires(std::is_arithmetic_v<T>)
+Mat<3, 3, T> euler_y(const T &radian) {
     using namespace std;
-    return Mat<3,3,T>{
-        cos(radian), 0, -sin(radian),
-        0,1,0,
-        sin(radian), 0, cos(radian)
-    };
+    return Mat<3, 3, T>{cos(radian), 0, -sin(radian), 0, 1, 0,
+                        sin(radian), 0, cos(radian)};
 }
 /**
  * @brief Short-cut for 3D euler rotation about z-axis.
  */
 template <class T>
-    requires (std::is_arithmetic_v<T>)
-Mat<3,3,T> euler_z(const T& radian) {
+    requires(std::is_arithmetic_v<T>)
+Mat<3, 3, T> euler_z(const T &radian) {
     using namespace std;
-    return Mat<3,3,T>{
-        cos(radian), sin(radian), 0,
-        -sin(radian), cos(radian), 0,
-        0 ,0 ,1
-    };
+    return Mat<3, 3, T>{
+        cos(radian), sin(radian), 0, -sin(radian), cos(radian), 0, 0, 0, 1};
+}
+template <class T>
+    requires(std::is_arithmetic_v<T>)
+Mat<4,4,T> rotation(const T& radian, const Vec<3,T>& axis = {1,0,0}){
+    const auto unit = axis.normalise();
+    using namespace std;
+    Mat<4, 4, T> rotation = {
+        (unit[0] * unit[0])*(1 - cos(radian)) + cos(radian),
+        (unit[0] * unit[1])*(1 - cos(radian)) + unit[2] * sin(radian),
+        (unit[0] * unit[2])*(1 - cos(radian)) - unit[1] * sin(radian),
+        0,
+
+        (unit[0] * unit[1])*(1 - cos(radian)) - unit[2] * sin(radian),
+        (unit[1] * unit[1])*(1 - cos(radian)) + cos(radian),
+        (unit[1] * unit[2])*(1 - cos(radian)) + unit[0] * sin(radian),
+        0,
+
+        (unit[0] * unit[2])*(1 - cos(radian)) + unit[1] * sin(radian),
+        (unit[1] * unit[2])*(1 - cos(radian)) - unit[0] * sin(radian),
+        (unit[2] * unit[2])*(1 - cos(radian)) + cos(radian),
+        0,
+
+        0,
+        0,
+        0,
+        1};
+    return rotation;
 }
 /**
  * @brief Short-cut for constructing translation matrix for 2D space.
  */
 template <class T>
-    requires (std::is_arithmetic_v<T>)
-Mat<3,3,T> translation_2D(const T& x, const T& y) {
-    return Mat<3,3,T>{
-        1,0,0,
-        0,1,0,
-        x,y,1,
+    requires(std::is_arithmetic_v<T>)
+Mat<3, 3, T> translation2(const T &x, const T &y) {
+    return Mat<3, 3, T>{
+        1, 0, 0, 0, 1, 0, x, y, 1,
+    };
+}
+template <class T>
+    requires(std::is_arithmetic_v<T>)
+Mat<3, 3, T> translation2(const Vec<2,T> &translation) {
+    return Mat<3, 3, T>{
+        1, 0, 0, 0, 1, 0, translation[0], translation[1], 1,
     };
 }
 /**
  * @brief Short-cut for constructing translation matrix for 3D space.
  */
 template <class T>
-    requires (std::is_arithmetic_v<T>)
-Mat<4,4,T> translation_3D(const T& x, const T& y, const T& z) {
-    return Mat<4,4,T>{
-        1,0,0,0,
-        0,1,0,0,
-        0,0,1,0,
-        x,y,z,1
-    };
+    requires(std::is_arithmetic_v<T>)
+Mat<4, 4, T> translation3(const T &x, const T &y, const T &z) {
+    return Mat<4, 4, T>{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, x, y, z, 1};
+}
+template <class T>
+    requires(std::is_arithmetic_v<T>)
+Mat<4, 4, T> translation3(const Vec<3,T> &translation) {
+    return Mat<4, 4, T>{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, translation[0], translation[1], translation[2], 1};
 }
 
+/**
+ * @brief Short-cut for constructing scale matrix for 2D space.
+ */
+template <class T>
+    requires(std::is_arithmetic_v<T>)
+Mat<2, 2, T> scale2(const T &x, const T &y) {
+    return Mat<2, 2, T>{x, 0, 0, y};
+}
+/**
+ * @brief Short-cut for constructing scale matrix for 3D space.
+ */
+template <class T>
+    requires(std::is_arithmetic_v<T>)
+Mat<3, 3, T> scale3(const T &x, const T &y, const T &z) {
+    return Mat<3, 3, T>{x, 0, 0, 0, y, 0, 0, 0, z};
+}
 /**
  * @return Calculate the outer product of vectors.
  */
@@ -678,26 +664,26 @@ template <class T>
 Mat<4, 4, T> look_at(const Vec<3, T> &eye, const Vec<3, T> &target,
                      const Vec<3, T> &up) {
     const Vec<3, T> forward = (target - eye).normalise_or_zero();
-    const Vec<3, T> right = forward.cross(up.normalise_or_zero()).normalise_or_zero();
+    const Vec<3, T> right =
+        forward.cross(up.normalise_or_zero()).normalise_or_zero();
     const Vec<3, T> true_up = right.cross(forward);
     const T tx = -right.dot(eye);
     const T ty = -true_up.dot(eye);
     const T tz = forward.dot(eye);
-    return Mat<4, 4, T>{
-        right[0],true_up[0],-forward[0],0,
-        right[1],true_up[1],-forward[1],0,
-        right[2],true_up[2],-forward[2],0,
-        tx,ty,tz,1
-    };
+    return Mat<4, 4, T>{right[0], true_up[0], -forward[0], 0,
+                        right[1], true_up[1], -forward[1], 0,
+                        right[2], true_up[2], -forward[2], 0,
+                        tx,       ty,         tz,          1};
 }
 
 /**
  * @brief This is a function generating the perspective projection matrix based
  * on right-hand coordinate system, assuming camera pointing along the -z axis.
- * Note that near and far are absolute value indicating the distance from the camera.
+ * Note that near and far are absolute value indicating the distance from the
+ * camera.
  */
 template <class T>
-    requires (std::is_arithmetic<T>::value)
+    requires(std::is_arithmetic<T>::value)
 Mat<4, 4, T> perspective(const T &aspect_ratio, const T &fov, const T &near,
                          const T &far) {
     return Mat<4, 4, T>{1 / (aspect_ratio * std::tan(fov / 2)),
@@ -710,32 +696,44 @@ Mat<4, 4, T> perspective(const T &aspect_ratio, const T &fov, const T &near,
                         0,
                         0,
                         0,
-                        - (far + near) / (far - near),
+                        -(far + near) / (far - near),
                         -1,
                         0,
                         0,
-                        - (2 * far * near) / (far - near),
+                        -(2 * far * near) / (far - near),
                         0};
 }
 /**
- * @brief This is a alternative function generating the perspective projection matrix based
- * on right-hand coordinate system, assuming camera pointing along the -z axis.
- * Note that near and far are absolute value indicating the distance from the camera.
+ * @brief This is a alternative function generating the perspective projection
+ * matrix based on right-hand coordinate system, assuming camera pointing along
+ * the -z axis. Note that near and far are absolute value indicating the
+ * distance from the camera.
  */
 template <class T>
 Mat<4, 4, T> perspective(const T &left, const T &right, const T &top,
                          const T &bottom, const T &near, const T &far) {
-    return Mat<4,4,T>{
-        (2*near)/(right-left),0,0,0,
-        0,(2*near)/(top-bottom),0,0,
-        -((right+left)/(right-left)),-((top+bottom)/(top-bottom)),2*((far+near)/(near-far)),-1,
-        0,0,-((2*far*near)/(far-near)),0
-    };
+    return Mat<4, 4, T>{(2 * near) / (right - left),
+                        0,
+                        0,
+                        0,
+                        0,
+                        (2 * near) / (top - bottom),
+                        0,
+                        0,
+                        -((right + left) / (right - left)),
+                        -((top + bottom) / (top - bottom)),
+                        2 * ((far + near) / (near - far)),
+                        -1,
+                        0,
+                        0,
+                        -((2 * far * near) / (far - near)),
+                        0};
 }
 /**
  * @brief This is a function generating the orthographic projection matrix based
  * on right-hand coordinate system, assuming camera pointing along the -z axis.
- * Note that near and far are absolute value indicating the distance from the camera.
+ * Note that near and far are absolute value indicating the distance from the
+ * camera.
  */
 template <class T>
 Mat<4, 4, T> orthgraphic(const T &left, const T &right, const T &top,
@@ -750,11 +748,11 @@ Mat<4, 4, T> orthgraphic(const T &left, const T &right, const T &top,
                         0,
                         0,
                         0,
-                        - 2 / (far-near),
+                        -2 / (far - near),
                         0,
                         -(left + right) / (right - left),
                         -(top + bottom) / (top - bottom),
-                        -(far+near) / (far-near),
+                        -(far + near) / (far - near),
                         1};
 };
 
