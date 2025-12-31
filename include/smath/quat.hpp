@@ -4,6 +4,7 @@
 #include "mat.hpp"
 #include <cmath>
 #include <concepts>
+#include <initializer_list>
 #include <string>
 namespace smath {
 template <class T>
@@ -16,8 +17,8 @@ class Quat {
     /***************************************
             Constructors
     ****************************************/
-    Quat() : data{} {};
-    Quat(T q0, T q1, T q2, T q3) : data{q0, q1, q2, q3} {};
+    Quat() : data{} {}
+    Quat(T q0, T q1, T q2, T q3) : data{q0, q1, q2, q3} {}
     // Copy constructor
     Quat(const Quat &other) = default;
     // Move constructor
@@ -26,6 +27,10 @@ class Quat {
     Quat &operator= (const Quat &other) = default;
     // Move assignment
     Quat &operator= (Quat && other) = default;
+    // Initializer list
+    Quat(std::initializer_list<T> values) {
+        std::memcpy(data, values.begin(), sizeof(T)*4);
+    }
 
     /***************************************
             Getters

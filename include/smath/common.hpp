@@ -172,5 +172,23 @@ constexpr Mat<M,N,T> smooth_step(const T &low, const T &high, const Mat<M,N,T> &
     auto v = clamp((value-low)/(high-low), 0.0f, 1.0f);
     return v*v*(3.0f-2.0f*v);
 }
+/***************************************
+    Reflect + Refract
+***************************************/
+template<class T>
+Vec<3,T> reflect(const Vec<3,T> incident, const Vec<3,T> normal) {
+    return incident - 2.0f * normal.dot(incident) * normal;
+}
+template<class T>
+Vec<3, T> refract(const Vec<3,T> incident, const Vec<3,T> normal, const T& n_0, const T& n_1) {
+    const T  r = n_0/n_1;
+    auto I_N = incident.dot(normal);
+    return r*incident-(r*(incident.dot(normal)))+std::sqrt(1-(r*r)*(1-(I_N*I_N))*normal);
+}
+template<class T>
+Vec<3, T> refract(const Vec<3,T> incident, const Vec<3,T> normal, const T& r) {
+    auto I_N = incident.dot(normal);
+    return r*incident-(r*(incident.dot(normal)))+std::sqrt(1-(r*r)*(1-(I_N*I_N))*normal);
+}
 } // namespace smath
 #endif

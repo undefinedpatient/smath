@@ -564,7 +564,7 @@ Mat<3, 3, T> euler_z(const T &radian) {
 template <class T>
     requires(std::is_arithmetic_v<T>)
 Mat<4,4,T> rotation(const T& radian, const Vec<3,T>& axis = {1,0,0}){
-    const auto unit = axis.normalise();
+    const auto unit = axis.normalize();
     using namespace std;
     Mat<4, 4, T> rotation = {
         (unit[0] * unit[0])*(1 - cos(radian)) + cos(radian),
@@ -675,9 +675,9 @@ std::array<Mat<4,4,T>, 3> decompose(const Mat<4,4,T> mat){
 template <class T>
 Mat<4, 4, T> look_at(const Vec<3, T> &eye, const Vec<3, T> &target,
                      const Vec<3, T> &up) {
-    const Vec<3, T> forward = (target - eye).normalise_or_zero();
+    const Vec<3, T> forward = (target - eye).normalize_or_zero();
     const Vec<3, T> right =
-        forward.cross(up.normalise_or_zero()).normalise_or_zero();
+        forward.cross(up.normalize_or_zero()).normalize_or_zero();
     const Vec<3, T> true_up = right.cross(forward);
     const T tx = -right.dot(eye);
     const T ty = -true_up.dot(eye);
