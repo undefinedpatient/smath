@@ -85,8 +85,10 @@ class TestRunner {
                 timer.stop();
                 time_count += timer.get_duration();
             } catch (const std::exception &e) {
+                std::cout<<"\033[31mError: "<<e.what()<<"\033[0m"<<std::endl;
                 num_failed++;
             } catch (...) {
+                std::cout<<"\033[31mUnknown Error"<<"\033[0m"<<std::endl;
                 num_failed++;
             }
         }
@@ -110,18 +112,20 @@ template <class T>
 static void assert_equal_impl(const T &value, const T &expected,
                               const char *valueString) {
     // PASSED
-    if (value == expected) {
+    if (static_cast<bool>(value == expected)==true) {
         std::cout << "Test: Assert Equal | Evaluate: " << valueString << "\n";
         std::cout << passed_message << "\n";
     }
     // FAILED
-    else if (value != expected) {
+    else if (static_cast<bool>(value == expected)==false) {
         std::cout << "Test: Assert Equal \nEvaluate: " << valueString
                   << "\nGet:\n"
                   << value << "\nExpected:\n"
                   << expected << "\n";
         std::cout << failed_message << "\n";
         throw std::runtime_error("TEST Failed");
+    }else{
+        throw std::runtime_error("Unknow error");
     }
     std::cout << std::endl;
 }

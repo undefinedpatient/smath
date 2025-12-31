@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <concepts>
+#include <initializer_list>
 #include <iostream>
 #include <ostream>
 #include <stdexcept>
@@ -21,6 +22,8 @@ class Vec {
             Constructors
     ****************************************/
     Vec() : data{} {};
+
+
     template <class... Us>
         requires(sizeof...(Us) == N && (std::convertible_to<Us, T> && ...))
     Vec(Us... args) : data{static_cast<T>(args)...} {}
@@ -30,9 +33,6 @@ class Vec {
         }
     }
     explicit Vec(const T *arr) {
-        // for (unsigned int i = 0; i < N; i++) {
-        //     this->data[i] = arr[i];
-        // }
         std::memcpy(this->data, arr, N*(sizeof(T)));
     }
     // Copy constructor
@@ -44,6 +44,13 @@ class Vec {
     // Move assignment
     Vec &operator=(Vec<N, T> &&other) noexcept = default;
 
+    // Initializer list
+    Vec(std::initializer_list<T> values) {
+        if(values.size()!=N){
+            throw std::invalid_argument("Number of values mismatched target vector size.");
+        }
+        std::memcpy(data,values.begin(),sizeof(T)*N);
+    }
     /***************************************
             Getters
     ****************************************/

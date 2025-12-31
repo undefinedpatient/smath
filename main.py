@@ -27,7 +27,6 @@ class Debugger:
             subprocess.run(args= ["ctest", "-V", "-R", self.tests[int(choice)]], cwd="./build/", text=True)
 
 
-# NOT IMPLEMENTED
 class Exporter:
     def __init__(self):
         self.path: str = ""

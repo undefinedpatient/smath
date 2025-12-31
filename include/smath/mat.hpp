@@ -5,6 +5,7 @@
 #include <cmath>
 #include <concepts>
 #include <cstring>
+#include <initializer_list>
 #include <iostream>
 #include <ostream>
 #include <stdexcept>
@@ -75,6 +76,25 @@ class Mat {
     Mat<M, N, T> &operator=(const Mat<M, N, T> &other) = default;
     // Move assignment
     Mat<M, N, T> &operator=(Mat<M, N, T> &&other) noexcept = default;
+
+    // Initializer List
+    Mat(std::initializer_list<T> values) {
+        if (values.size()!=M*N){
+            throw std::invalid_argument("Initalizer list size does not fit matrix size.");
+        }
+        std::memcpy(data, values.begin(), values.size()*sizeof(T));
+    }
+    Mat(std::initializer_list<Vec<M,T>> vecs){
+        if (vecs.size()!=N){
+            throw std::invalid_argument("Initalizer list size does not fit matrix column number.");
+        }
+        const Vec<M,T> *base_address = vecs.begin();
+        for (unsigned int i = 0; i<N; i++){
+            std::memcpy(&data[i*M],
+                        (base_address+i),
+                        sizeof(T)*M);
+        }
+    }
 
     /***************************************
         Getters
@@ -276,38 +296,6 @@ class Mat {
         }
         return result;
     }
-    // /**
-    //  * @brief 3D rotation on 4x4 homogeneous matrix
-    //  */
-    // // template <typename U = T>
-    // //     requires(M == 4 && N == 4)
-    // Mat<4, 4, T> rotate(const T &radian, const Vec<3, T> &axis = {1, 0, 0},
-    //                     Vec<3, T> pivot = {0, 0, 0}) const requires
-    //                     (M==4&&N==4){
-    //     const auto unit = axis.normalise();
-    //     using namespace std;
-    //     Mat<4, 4, T> rotation = {
-    //         (unit[0] * unit[0])*(1 - cos(radian)) + cos(radian),
-    //         (unit[0] * unit[1])*(1 - cos(radian)) + unit[2] * sin(radian),
-    //         (unit[0] * unit[2])*(1 - cos(radian)) - unit[1] * sin(radian),
-    //         0,
-
-    //         (unit[0] * unit[1])*(1 - cos(radian)) - unit[2] * sin(radian),
-    //         (unit[1] * unit[1])*(1 - cos(radian)) + cos(radian),
-    //         (unit[1] * unit[2])*(1 - cos(radian)) + unit[0] * sin(radian),
-    //         0,
-
-    //         (unit[0] * unit[2])*(1 - cos(radian)) + unit[1] * sin(radian),
-    //         (unit[1] * unit[2])*(1 - cos(radian)) - unit[0] * sin(radian),
-    //         (unit[2] * unit[2])*(1 - cos(radian)) + cos(radian),
-    //         0,
-
-    //         0,
-    //         0,
-    //         0,
-    //         1};
-    //     return (rotation * (*this).translate(-pivot)).translate(pivot);
-    // }
 
     /**
      * @brief Custom boolean casting for vector. This require the element in the
@@ -656,11 +644,35 @@ Mat<N, N, T> outer_product(const Vec<N, T> left, const Vec<N, T> right) {
     Mat<1, N, T> r{right};
     return l.cross(r.transpose());
 }
-
 template <class T>
+std::array<Mat<4,4,T>, 3> decompose(const Mat<4,4,T> mat){
+    Mat<4,4,T> translation = Mat<4,4,T>::identity();
+    Mat<4,4,T> scale = Mat<4,4,T>::identity();
+    Mat<4,4,T> copy{mat};
+    translation[12] = copy[12];
+    translation[13] = copy[13];
+    translation[14] = copy[14];
+    copy[12] = static_cast<T>(0.0f);
+    copy[13] = static_cast<T>(0.0f);
+    copy[14] = static_cast<T>(0.0f);
+
+    
+    std::array<Vec<4,T>, 4> temp = copy.to_vectors();
+    T scale_x = temp.at(0).length();
+    T scale_y = temp.at(1).length();
+    T scale_z = temp.at(2).length();
+    scale[0] = scale_x;
+    scale[5] = scale_y;
+    scale[10] = scale_z;
+    Mat<4, 4, T> rotation{
+        Vec<4, T>(temp.at(0) / temp.at(0).length()), Vec<4, T>(temp.at(1) / temp.at(1).length()),
+        Vec<4, T>(temp.at(2) / temp.at(2).length()), Vec<4, T>{0, 0, 0, 1.0f}};
+    return {translation, rotation, scale};
+}
 /**
  * @return Essentially Generate View matrix.
  */
+template <class T>
 Mat<4, 4, T> look_at(const Vec<3, T> &eye, const Vec<3, T> &target,
                      const Vec<3, T> &up) {
     const Vec<3, T> forward = (target - eye).normalise_or_zero();
