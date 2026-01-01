@@ -3,6 +3,7 @@
 
 #include "quat.hpp"
 #include <concepts>
+#include <stdexcept>
 #include <type_traits>
 #define PI 3.141592653589793
 
@@ -189,6 +190,23 @@ template<class T>
 Vec<3, T> refract(const Vec<3,T> incident, const Vec<3,T> normal, const T& r) {
     auto I_N = incident.dot(normal);
     return r*incident-(r*(incident.dot(normal)))+std::sqrt(1-(r*r)*(1-(I_N*I_N))*normal);
+}
+
+/***************************************
+   Minkowski Distance 
+***************************************/
+template<unsigned int N, class T>
+requires (std::is_convertible_v<T, float>&&std::is_arithmetic_v<T>)
+T distance(const Vec<N,T> &a, const Vec<N,T> &b, const float &dimension){
+    if (dimension == 0){
+        throw std::invalid_argument("Dimension must be non-zero value.");
+    }
+    T temp = static_cast<T>(0.0f);
+    using namespace std;
+    for(unsigned int i = 0; i < N; i++){
+        temp += (pow(abs(a[i] - b[i]),dimension));
+    }
+    return static_cast<T>(pow(temp, 1/dimension));
 }
 } // namespace smath
 #endif
