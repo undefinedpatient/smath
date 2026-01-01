@@ -26,9 +26,10 @@
 
 > ## Quaternion
 > Supported Operations
+> - Normalize / Normalize or Zero
 > - from_mat3() / to_mat3()
 > - from_mat4() / to_mat4()
-> - conjugate
+> - conjugate / inverse
 
 For coordinate system relevant computation (projection matrix), they are all based on `right-handed y-up` system, assuming camera is looking at the direction -z.
 

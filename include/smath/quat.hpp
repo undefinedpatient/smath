@@ -18,7 +18,10 @@ class Quat {
             Constructors
     ****************************************/
     Quat() : data{} {}
-    Quat(T q0, T q1, T q2, T q3) : data{q0, q1, q2, q3} {}
+    Quat(const T &q0, const T &q1, const T &q2, const T &q3)
+        : data{q0, q1, q2, q3} {}
+    Quat(const T &real, const Vec<3, T> &imaginary)
+        : data{real, imaginary[0], imaginary[1], imaginary[2]} {}
     // Copy constructor
     Quat(const Quat &other) = default;
     // Move constructor
@@ -110,20 +113,47 @@ class Quat {
     Quat<T> conjugate() const {
         return Quat{data[0], -data[1], -data[2], -data[3]};
     }
+    /**
+     * @return Normalized Quaternion of the operand. Raise error when
+     * encounter a zero-quaternion
+     */
     Quat<T> normalize() const {
-        T divisor = norm2();
+        T divisor = length2();
+        if(divisor==0){
+            throw std::logic_error("Cannot normalize a zero-quaternion.");
+        }
         return (*this)/divisor;
     }
-    T norm() const {
-        return std::sqrt(norm2());
+    /**
+     * @return Normalized Quaternion of the operand. Return zero-quaternion when
+     * encounter a zero-quaternion
+     */
+    Quat<T> normalize_or_zero() const {
+        T divisor = length2();
+        if(divisor==0){
+            return {0,0,0,0};
+        }
+        return (*this)/divisor;
     }
-    T norm2() const {
+    /**
+     * @return length of the Quaternion.
+     */
+    T length() const {
+        return std::sqrt(length2());
+    }
+    /**
+     * @return squared length of the Quaternion.
+     */
+    T length2() const {
         return data[0] * data[0] + data[1] * data[1] + data[2] * data[2] +
                data[3] * data[3];
     }
-    Quat<T> inverse() const { return this->conjugate() / this->norm2(); }
+    Quat<T> inverse() const { return this->conjugate() / this->length2(); }
+    /**
+     * @brief Convert Quaternion into Mat3x3, assuming the length of quaternion is 1.
+     */
     Mat<3, 3, T> to_mat3() const {
-        return Mat<3, 3, T>{2 * (data[0] * data[1] - 0.5),
+        return Mat<3, 3, T>{2 * (data[0] * data[0] * data[1] * data[1] - 0.5),
                             2 * (data[0] * data[3] + data[1] * data[2]),
                             2 * (data[1] * data[3] - data[0] * data[2]),
                             2 * (data[1] * data[2] - data[0] * data[3]),
@@ -133,8 +163,11 @@ class Quat {
                             2 * (data[2] * data[3] + data[0] * data[1]),
                             2 * (data[0] * data[0] + data[3] * data[3] - 0.5)};
     }
+    /**
+     * @brief Convert Quaternion into Mat4x4, assuming the length of quaternion is 1.
+     */
     Mat<4, 4, T> to_mat4() const {
-        return Mat<4, 4, T>{2 * (data[0] * data[1] - 0.5),
+        return Mat<4, 4, T>{2 * (data[0] * data[0] * data[1] * data[1] - 0.5),
                             2 * (data[0] * data[3] + data[1] * data[2]),
                             2 * (data[1] * data[3] - data[0] * data[2]),
                             0,
@@ -152,31 +185,40 @@ class Quat {
                             1};
     }
     /**
-     * @brief Convert an Eular rotation matrix to Quaternion.
+     * @brief Convert an Eular rotation matrix to Quaternion. Using method
+     * described in "Accurate Computation of Quaternions from Rotation Matrices" in January 2019.
      */
-    Quat<T> from_mat3(Mat<3, 3, T> mat) const {
-        T trace = mat.trace();
-        Quat<T> result{};
-        for (unsigned int i = 0; i < 4; i++) {
-            if(i==0){
-                result[i] = std::sqrt((trace+1)/4);
-                continue;
-            }
-            result[i] = std::sqrt(mat[4 * i] / 2 + (1 - trace) / 4);
-        }
-        return result;
+    Quat<T> from_mat3(const Mat<3, 3, T>& matrix, const T& threshold = 0) const {
+        const Mat<3, 3, T> &m = matrix;
+        const T q_0 = (m[0] + m[4] + m[8] > threshold)
+                          ? (1 / 2) * sqrt(1 + m[0] + m[4] + m[8])
+                          : (1 / 2) * sqrt(((m[5] - m[7]) * (m[5] - m[7]) +
+                                            (m[6] - m[2]) * (m[6] - m[2]) +
+                                            (m[1] - m[3]) * (m[1] - m[3])) /
+                                           (3 - m[0] - m[4] - m[8]));
+        const T q_1 = (m[0] - m[4] - m[8] > threshold)
+                          ? (1 / 2) * sqrt(1 + m[0] - m[4] - m[8])
+                          : (1 / 2) * sqrt(((m[5] - m[7]) * (m[5] - m[7]) +
+                                            (m[3] + m[1]) * (m[3] + m[1]) +
+                                            (m[2] + m[6]) * (m[2] + m[6])) /
+                                           (3 - m[0] + m[4] + m[8]));
+        const T q_2 = (-m[0] + m[4] - m[8] > threshold)
+                          ? (1 / 2) * sqrt(1 - m[0] + m[4] - m[8])
+                          : (1 / 2) * sqrt(((m[6] - m[2]) * (m[6] - m[2]) +
+                                            (m[3] + m[1]) * (m[3] + m[1]) +
+                                            (m[7] + m[5]) * (m[7] + m[5])) /
+                                           (3 + m[0] - m[4] + m[8]));
+        const T q_3 = (-m[0] - m[4] + m[8] > threshold)
+                          ? (1 / 2) * sqrt(1 - m[0] - m[4] + m[8])
+                          : (1 / 2) * sqrt(((m[1] - m[3]) * (m[1] - m[3]) +
+                                            (m[6] + m[2]) * (m[6] + m[2]) +
+                                            (m[5] + m[7]) * (m[5] + m[7])) /
+                                           (3 + m[0] + m[4] - m[8]));
+        ;
+        return Quat<T>{q_0, q_1, q_2, q_3};
     }
-    Quat<T> from_mat4(Mat<4, 4, T> mat) const {
-        T trace = mat.trace();
-        Quat<T> result{};
-        for (unsigned int i = 0; i < 4; i++) {
-            if(i==0){
-                result[i] = std::sqrt((trace+1)/4);
-                continue;
-            }
-            result[i] = std::sqrt(mat[5 * i] / 2 + (1 - trace) / 4);
-        }
-        return result;
+    Quat<T> from_mat4(const Mat<4, 4, T>& mat) const {
+        return from_mat3(mat.to_mat3());
     }
     /***************************************
             Operators Overload
