@@ -35,6 +35,11 @@ class Quat {
         std::memcpy(data, values.begin(), sizeof(T)*4);
     }
 
+    static Quat<T> identity() {
+        return Quat<T>{1.0f,0.0f,0.0f,0.0f};
+
+    }
+
     /***************************************
             Getters
     ****************************************/
@@ -118,7 +123,7 @@ class Quat {
      * encounter a zero-quaternion
      */
     Quat<T> normalize() const {
-        T divisor = length2();
+        T divisor = length();
         if(divisor==0){
             throw std::logic_error("Cannot normalize a zero-quaternion.");
         }
@@ -129,9 +134,20 @@ class Quat {
      * encounter a zero-quaternion
      */
     Quat<T> normalize_or_zero() const {
-        T divisor = length2();
+        T divisor = length();
         if(divisor==0){
             return {0,0,0,0};
+        }
+        return (*this)/divisor;
+    }
+    /**
+     * @return Normalized Quaternion of the operand. Return default-quaternion when
+     * encounter a zero-quaternion
+     */
+    Quat<T> normalize_or_one() const {
+        T divisor = length();
+        if(divisor==0){
+            return {1,0,0,0};
         }
         return (*this)/divisor;
     }
@@ -150,39 +166,25 @@ class Quat {
     }
     Quat<T> inverse() const { return this->conjugate() / this->length2(); }
     /**
-     * @brief Convert Quaternion into Mat3x3, assuming the length of quaternion is 1.
+     * @brief Convert Quaternion into Mat3x3
      */
     Mat<3, 3, T> to_mat3() const {
-        return Mat<3, 3, T>{2 * (data[0] * data[0] * data[1] * data[1] - 0.5),
-                            2 * (data[0] * data[3] + data[1] * data[2]),
-                            2 * (data[1] * data[3] - data[0] * data[2]),
-                            2 * (data[1] * data[2] - data[0] * data[3]),
-                            2 * (data[0] * data[0] + data[2] * data[2] - 0.5),
-                            2 * (data[0] * data[1] + data[2] * data[3]),
-                            2 * (data[0] * data[2] + data[1] * data[3]),
-                            2 * (data[2] * data[3] + data[0] * data[1]),
-                            2 * (data[0] * data[0] + data[3] * data[3] - 0.5)};
+        auto q = this->normalize_or_one();
+        return Mat<3, 3, T>{static_cast<T>(2.0f) * (q[0] * q[0] + q[1] * q[1] - static_cast<T>(0.5)),
+                            static_cast<T>(2.0f) * (q[0] * q[3] + q[1] * q[2]),
+                            static_cast<T>(2.0f) * (q[1] * q[3] - q[0] * q[2]),
+                            static_cast<T>(2.0f) * (q[1] * q[2] - q[0] * q[3]),
+                            static_cast<T>(2.0f) * (q[0] * q[0] + q[2] * q[2] - static_cast<T>(0.5)),
+                            static_cast<T>(2.0f) * (q[0] * q[1] + q[2] * q[3]),
+                            static_cast<T>(2.0f) * (q[0] * q[2] + q[1] * q[3]),
+                            static_cast<T>(2.0f) * (q[2] * q[3] + q[0] * q[1]),
+                            static_cast<T>(2.0f) * (q[0] * q[0] + q[3] * q[3] - static_cast<T>(0.5))};
     }
     /**
-     * @brief Convert Quaternion into Mat4x4, assuming the length of quaternion is 1.
+     * @brief Convert Quaternion into Mat4x4
      */
     Mat<4, 4, T> to_mat4() const {
-        return Mat<4, 4, T>{2 * (data[0] * data[0] * data[1] * data[1] - 0.5),
-                            2 * (data[0] * data[3] + data[1] * data[2]),
-                            2 * (data[1] * data[3] - data[0] * data[2]),
-                            0,
-                            2 * (data[1] * data[2] - data[0] * data[3]),
-                            2 * (data[0] * data[0] + data[2] * data[2] - 0.5),
-                            2 * (data[0] * data[1] + data[2] * data[3]),
-                            0,
-                            2 * (data[0] * data[2] + data[1] * data[3]),
-                            2 * (data[2] * data[3] + data[0] * data[1]),
-                            2 * (data[0] * data[0] + data[3] * data[3] - 0.5),
-                            0,
-                            0,
-                            0,
-                            0,
-                            1};
+        return to_mat3().to_homogeneous();
     }
     /**
      * @brief Convert an Eular rotation matrix to Quaternion. Using method
@@ -224,6 +226,17 @@ class Quat {
             Operators Overload
     ****************************************/
 
+    /**
+     * @brief Custom boolean casting for quaternion. This require the element in the Quat to be able to convert to bool.
+     * @return True if and only if all vector elements are True.
+     */
+    explicit operator bool() const {
+        for (unsigned int i = 0; i < 4; i++) {
+            if (!(*this)[i])
+                return false;
+        }
+        return true;
+    }
     /**
      * @brief Unary - operator, simply flip all element.
      */
@@ -389,7 +402,7 @@ class Quat {
 template<class T>
 Quat<T> slerp(const Quat<T> &a, const Quat<T> &b, const T& t){
     using namespace std;
-    const T angle = acos(a.dot(b))/2;
+    const T angle = acos(a.dot(b));
     return a*(sin((1-t)*angle)/sin(angle))+b*(sin(t*angle)/sin(angle));
 }
 } // namespace smath
