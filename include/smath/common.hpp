@@ -212,7 +212,7 @@ Mat<M,N,T> absolute(const Mat<M,N,T>& mat) {
         result[i] = static_cast<T>(std::abs(result[i]));
     }
     return result;
-
+}
 /***************************************
    Minkowski Distance 
 ***************************************/
