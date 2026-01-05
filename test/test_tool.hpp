@@ -133,12 +133,12 @@ static void assert_equal_impl(const T &value, const T &expected,
 template <class T>
 static void assert_close_impl(const T &value, const T &expected,
                               const T &threshold, const char *valueString) {
-    // FAILED
+    // PASSED
     if (value < expected + threshold && value > expected - threshold) {
         std::cout << "Test: Assert Close | Evaluate: " << valueString << "\n";
         std::cout << passed_message << "\n";
     }
-    // PASSED
+    // FAILED
     else {
         std::cout << "Test: Assert Close \nEvaluate: " << valueString << "\n";
         std::cout << "Get:\n" << value << "\n";

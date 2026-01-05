@@ -56,7 +56,7 @@ class Vec {
     ****************************************/
 
     /**
-     * @brief Operator Overloading for accessing data array size of N
+     * @brief Operator Overloading for accessing data array size of N.
      * @param i zero-based index
      * @return data[i]
      */
@@ -66,7 +66,7 @@ class Vec {
         return data[i];
     }
     /**
-     * @brief Operator Overloading for accessing data array size of N
+     * @brief Operator Overloading for accessing data array size of N.
      * @param i zero-based index
      * @return data[i]
      */
@@ -76,7 +76,7 @@ class Vec {
         return data[i];
     }
     /**
-     * @return String representation of vector
+     * @return String representation of vector.
      */
     constexpr std::string to_string() const {
         std::string str = "Vec" + std::to_string(N) + "<";
@@ -90,7 +90,7 @@ class Vec {
     }
 
     /**
-     * @brief Swizzling-like accessor
+     * @brief Swizzling-like accessor.
      */
     auto operator[](const unsigned int index, auto... indices) const requires(sizeof...(indices)>0){
         return Vec<sizeof...(indices)+1, T>{(*this)[index], (*this)[indices]...};
@@ -100,7 +100,7 @@ class Vec {
     ****************************************/
 
     /**
-     * @return length of the vector
+     * @return Length of the vector.
      */
     T length() const {
         T len = 0;
@@ -110,7 +110,7 @@ class Vec {
         return static_cast<T>(std::sqrt(len));
     }
     /**
-     * @return squared length of the vector
+     * @return Squared length of the vector.
      */
     T length2() const {
         T len = 0;
@@ -120,7 +120,7 @@ class Vec {
         return len;
     }
     /**
-     * @return Cross Product
+     * @return Classic Cross Product.
      */
     Vec<3, T> cross(const Vec<3, T> &other) const requires (N==3) {
         return Vec<3, T>{(*this)[1] * other[2] - (*this)[2] * other[1],
@@ -128,7 +128,7 @@ class Vec {
                          (*this)[0] * other[1] - (*this)[1] * other[0]};
     }
     /**
-     * @return Dot Product
+     * @return Classic Dot Product.
      */
     T dot(const Vec<N, T> &other) const {
         T total = 0;

@@ -3,6 +3,7 @@
 
 #include "quat.hpp"
 #include <concepts>
+#include <stdexcept>
 #include <type_traits>
 #define PI 3.141592653589793
 
@@ -211,6 +212,22 @@ Mat<M,N,T> absolute(const Mat<M,N,T>& mat) {
         result[i] = static_cast<T>(std::abs(result[i]));
     }
     return result;
+
+/***************************************
+   Minkowski Distance 
+***************************************/
+template<unsigned int N, class T>
+requires (std::is_convertible_v<T, float>&&std::is_arithmetic_v<T>)
+T distance(const Vec<N,T> &a, const Vec<N,T> &b, const float &dimension){
+    if (dimension == 0){
+        throw std::invalid_argument("Dimension must be non-zero value.");
+    }
+    T temp = static_cast<T>(0.0f);
+    using namespace std;
+    for(unsigned int i = 0; i < N; i++){
+        temp += (pow(abs(a[i] - b[i]),dimension));
+    }
+    return static_cast<T>(pow(temp, 1/dimension));
 }
 } // namespace smath
 #endif

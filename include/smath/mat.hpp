@@ -237,6 +237,18 @@ class Mat {
         }
         return sub_matrix;
     }
+    /**
+     * @brief Simply shrink the 4x4 matrix into 3x3 via discarding values.
+     */
+    Mat<3, 3, T> to_mat3() const 
+    requires(M==4 && N==4)
+    {
+        return Mat<3,3,T>{
+            data[0],data[1],data[2],
+            data[4],data[5],data[6],
+            data[8],data[9],data[10]
+        };
+    }
     Mat<4, 4, T> to_homogeneous() const
         requires(M == 3 && N == 3)
     {

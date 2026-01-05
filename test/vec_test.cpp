@@ -82,7 +82,15 @@ TEST(VEC_ROTATION_TEST){
     auto r01 = a01.rotate(radian01, b01);
     assert_close(r01,Vec3f(0.756,-0.3987,3.6427),Vec3f(0.0005,0.0005,0.0005));
 }
-
+TEST(DISTANCE_TEST){
+    assert_close(distance(Vec3f(0,0,0), Vec3f(0,0,0), 1), 0.0f, 0.01f);
+    assert_close(distance(Vec3f(0,0,0), Vec3f(0,0,0), 2), 0.0f, 0.01f);
+    assert_close(distance(Vec3f(0,0,0), Vec3f(0,0,0), 3), 0.0f, 0.01f);
+    assert_close(distance(Vec3f(0,3,4), Vec3f(7,6,3), 2), 7.68f, 0.01f);
+    assert_close(distance(Vec3f(0,3,4), Vec3f(7,6,3), 10), 7.00f, 0.01f);
+    assert_close(distance(Vec3f(0,3,4), Vec3f(7,6,3), 0.5f), 28.92f, 0.01f);
+    assert_close(distance(Vec3f(0,3,4), Vec3f(7,6,3), -2.0f), 0.9401f, 0.01f);
+}
 TEST(VEC_COMPARISON_OPERATORS) {
     assert_equal(Vec3f(1, 2, 3) == Vec3f(1, 2, 3), Vec3u(1, 1, 1));
     assert_equal(Vec3f(1, 2, 3) != Vec3f(1, 2, 4), Vec3u(0, 0, 1));
