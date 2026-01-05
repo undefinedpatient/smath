@@ -26,6 +26,7 @@
 
 > ## Quaternion
 > Supported Operations
+> - Normalize / Normalize or Zero
 > - from_mat3() / to_mat3()
 > - from_mat4() / to_mat4()
 > - conjugate

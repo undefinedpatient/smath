@@ -190,5 +190,27 @@ Vec<3, T> refract(const Vec<3,T> incident, const Vec<3,T> normal, const T& r) {
     auto I_N = incident.dot(normal);
     return r*incident-(r*(incident.dot(normal)))+std::sqrt(1-(r*r)*(1-(I_N*I_N))*normal);
 }
+
+/***************************************
+   Absolute 
+***************************************/
+template<unsigned int N, class T>
+requires (std::is_arithmetic_v<T>)
+Vec<N,T> absolute(const Vec<N,T>& vec) {
+    Vec<N,T> result(vec);
+    for (unsigned int i = 0; i < N; i++){
+        result[i] = std::abs(result[i]);
+    }
+    return result;
+}
+template<unsigned int M, unsigned int N, class T>
+requires (std::is_arithmetic_v<T>)
+Mat<M,N,T> absolute(const Mat<M,N,T>& mat) {
+    Mat<M,N,T> result(mat);
+    for (unsigned int i = 0; i < M*N; i++){
+        result[i] = static_cast<T>(std::abs(result[i]));
+    }
+    return result;
+}
 } // namespace smath
 #endif
