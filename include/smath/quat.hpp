@@ -222,6 +222,23 @@ class Quat {
     Quat<T> from_mat4(const Mat<4, 4, T>& mat) const {
         return from_mat3(mat.to_mat3());
     }
+    bool all() const{
+        for (unsigned int i = 0; i<4; i++){
+            if(!data[i])
+                return false;
+        }
+        return true;
+    }
+    bool any() const{
+        for (unsigned int i = 0; i<4; i++){
+            if(data[i])
+                return true;
+        }
+        return false;
+    }
+    bool none() const{
+        return !any();
+    }
     /***************************************
             Operators Overload
     ****************************************/

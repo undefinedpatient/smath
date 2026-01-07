@@ -309,6 +309,29 @@ class Mat {
         return result;
     }
 
+
+    bool all() const{
+        for (unsigned int i = 0; i<M*N; i++){
+            if(!data[i])
+                return false;
+        }
+        return true;
+    }
+    bool any() const{
+        for (unsigned int i = 0; i<M*N; i++){
+            if(data[i])
+                return true;
+        }
+        return false;
+    }
+    bool none() const{
+        return !any();
+    }
+
+    /***************************************
+            Operators Overload
+    ****************************************/
+
     /**
      * @brief Custom boolean casting for vector. This require the element in the
      * Vec to be able to convert to bool.

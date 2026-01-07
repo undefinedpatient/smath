@@ -4,7 +4,6 @@
 #include <cstdlib>
 #include <exception>
 #include <iostream>
-#include <ratio>
 #include <stdexcept>
 #include <string>
 #include <vector>

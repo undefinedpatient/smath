@@ -103,4 +103,15 @@ TEST(QUAT_SLERP) {
     assert_close(mid[1], static_cast<float>(std::sin(PI/4)), 1e-5f);
 }
 
+TEST(BOOLEAN){
+    Quat<float> q0{1.0f, 0.0f, 0.0f, 0.0f}; // identity
+    Quat<float> q1{0.0f, 0.0f, 0.0f, 0.0f}; // 180° around X
+    assert_equal(q0.all(), false);
+    assert_equal(q0.any(), true);
+    assert_equal(q0.none(), false);
+    assert_equal(q1.all(), false);
+    assert_equal(q1.any(), false);
+    assert_equal(q1.none(), true);
+}
+
 int main() { return TestRunner::instance().run("Quaternion Test"); }

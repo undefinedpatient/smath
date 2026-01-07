@@ -4,11 +4,11 @@
 
 using namespace smath;
 
-TEST(PRINT_TEST) {
+TEST(PRINT) {
     std::cout << Mat2f(0, 1, 2, 3).toString() << std::endl;
     std::cout << Mat3f(0, 1, 2, 3, 4, 5, 6, 7, 8).toString() << std::endl;
 }
-TEST(CONSTRUCTOR_TEST){
+TEST(CONSTRUCTOR){
     Mat4f mat0{1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1};
     Vec4f vec00{1,0,0,0};
     Vec4f vec01{0,1,0,0};
@@ -17,7 +17,7 @@ TEST(CONSTRUCTOR_TEST){
     Mat4f mat1{vec00, vec01, vec02, vec03};
     assert_equal(mat0, mat1);
 }
-TEST(ELEMENT_WISE_TEST) {
+TEST(ELEMENT_WISE) {
     auto mat00 = Mat<3, 2, float>::full(4.0f);
     auto mat01 = Mat<3, 2, float>::full(4.0f);
     auto mat02 = Mat<3, 2, int>::full(4);
@@ -36,7 +36,7 @@ TEST(ELEMENT_WISE_TEST) {
     assert_equal(mat02 % mat03, r04);
     assert_equal(mat00 - mat04, r05);
 }
-TEST(TRANSPOSE_TEST) {
+TEST(TRANSPOSE) {
     assert_equal(Mat2f(0, 1, 2, 3).transpose(), Mat2f(0, 2, 1, 3));
     Mat<3, 2, float> mat00 = Mat<2, 3, float>{0, 1, 2, 3, 4, 5}.transpose();
     Mat<3, 2, float> mat01 = Mat<3, 2, float>{0, 2, 4, 1, 3, 5};
@@ -46,7 +46,7 @@ TEST(TRANSPOSE_TEST) {
     Mat<2, 4, float> mat11 = Mat<2, 4, float>{0, 4, 1, 5, 2, 6, 3, 7};
     assert_equal(mat10, mat11);
 }
-TEST(DETERMINANT_TEST) {
+TEST(DETERMINANT) {
     assert_equal(Mat2f(0, 0, 0, 0).determinant(), 0.0f);
     assert_equal(Mat2f(1, 0, 0, 1).determinant(), 1.0f);
     assert_equal(Mat2f(1, 2, 3, 4).determinant(), -2.0f);
@@ -54,7 +54,7 @@ TEST(DETERMINANT_TEST) {
                      .determinant(),
                  -306.0f);
 }
-TEST(SUBMATRIX_TEST) {
+TEST(SUBMATRIX) {
     assert_equal(Mat2f(1, 2, 3, 4).subMatrixAt(0, 0), Mat1f(4));
     assert_equal(Mat2f(1, 2, 3, 4).subMatrixAt(1, 1), Mat1f(1));
     assert_equal(Mat3f(0, 1, 2, 3, 4, 5, 6, 7, 8).subMatrixAt(2, 0),
@@ -76,12 +76,12 @@ TEST(SUBMATRIX_TEST) {
                  Mat3f(0, 1, 2, 4, 5, 6, 8, 9, 10));
 }
 
-TEST(TO_HOMOGENEOUS_TEST) {
+TEST(TO_HOMOGENEOUS) {
     assert_equal(Mat3f(0, 1, 2, 3, 4, 5, 6, 7, 8).to_homogeneous(),
                  Mat4f(0, 1, 2, 0, 3, 4, 5, 0, 6, 7, 8, 0, 0, 0, 0, 1));
 }
 
-TEST(MULTIPLICATION_TEST) {
+TEST(MULTIPLICATION) {
     auto mat00 = Mat2f(0, 1, 2, 3);
     auto mat01 = Mat<2, 1, float>(1, 2);
     auto r0 = Mat<2, 1, float>(4, 7);
@@ -99,7 +99,7 @@ TEST(MULTIPLICATION_TEST) {
     auto r3 = Mat3f(3, -6, -21, -2, 0, 4, 24, 18, -33);
     assert_equal(mat30.cross(mat31), r3);
 }
-TEST(MAT_TO_VEC_TEST) {
+TEST(MAT_TO_VEC) {
     auto mat00 = Mat3f(1, 2, 3, 4, 5, 6, 7, 8, 9);
     auto r00 = mat00.to_vectors()[0] == Vec3f(1, 2, 3);
     assert_equal(mat00.to_vectors()[0], Vec3f(1, 2, 3));
@@ -111,13 +111,13 @@ TEST(MAT_TO_VEC_TEST) {
     assert_equal(mat01.to_vectors()[1], Vec3f(4, 5, 6));
 }
 
-TEST(INVERSION_TEST) {
+TEST(INVERSION) {
     auto mat00 = Mat2f(1.0f, 2.0f, 3.0f, 4.0f);
     auto r00 = Mat2f(-2.0f, 1.0f, 1.5f, -0.5f);
     assert_equal(mat00.inverse(), r00);
 };
 
-TEST(DECOMPOSE_TEST) {
+TEST(DECOMPOSE) {
     Mat4f transform_without_rot0{2, 0, 0, 0, 0, 2, 0, 0, 0,
                      0, 2, 0, 1, 2, 3, 1
     };
@@ -132,6 +132,18 @@ TEST(DECOMPOSE_TEST) {
     assert_equal(result[1],rotation);
     assert_equal(result[2],scale);
 
+}
+
+TEST(BOOLEAN){
+    Mat2f m0{0,0,0,0};
+    Mat2f m1{1,0,0,0};
+
+    assert_equal(m0.all(), false);
+    assert_equal(m0.any(), false);
+    assert_equal(m0.none(), true);
+    assert_equal(m1.all(), false);
+    assert_equal(m1.any(), true);
+    assert_equal(m1.none(), false);
 }
 
 int main() { return TestRunner::instance().run("Mat Test"); }

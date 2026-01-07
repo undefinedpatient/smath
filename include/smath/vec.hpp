@@ -199,6 +199,23 @@ class Vec {
                std::cos(radian) * (*this) + std::sin(radian) * (this->cross(n));
     }
 
+    bool all() const{
+        for (unsigned int i = 0; i<N; i++){
+            if(!data[i])
+                return false;
+        }
+        return true;
+    }
+    bool any() const{
+        for (unsigned int i = 0; i<N; i++){
+            if(data[i])
+                return true;
+        }
+        return false;
+    }
+    bool none() const{
+        return !any();
+    }
     /***************************************
             Operators Overload
     ****************************************/
