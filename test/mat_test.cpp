@@ -1,6 +1,6 @@
-#include "mat.hpp"
-#include "smath.hpp"
-#include "test_tool.hpp"
+#include "mat.hh"
+#include "smath.hh"
+#include "test_tool.hh"
 
 using namespace smath;
 

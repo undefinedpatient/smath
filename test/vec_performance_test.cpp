@@ -1,5 +1,6 @@
-#include "test_tool.hpp"
-#include "smath.hpp"
+#include "test_tool.hh"
+#include "smath.hh"
+
 using namespace smath;
 TEST(VECTOR_ELEMENT_WISE_ADDITION_PERFORMANCE){
     auto base = Vec<16,unsigned int>();

@@ -21,7 +21,7 @@ if(SMATH_BUILD_TESTS)
         get_filename_component(TEST_NAME ${TEST_SOURCE} NAME_WE)
         add_executable(${TEST_NAME}
           ${TEST_SOURCE}
-          test/test_tool.hpp
+          test/test_tool.hh
         )
         if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
             target_compile_options(${TEST_NAME} PRIVATE -march=native -O0)

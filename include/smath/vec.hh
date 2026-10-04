@@ -7,6 +7,7 @@
 #include <ostream>
 #include <stdexcept>
 #include <string>
+#include <cmath>
 #include <type_traits>
 
 namespace smath {

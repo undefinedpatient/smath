@@ -1,6 +1,6 @@
-#include "test_tool.hpp"
-#include "smath.hpp"
-#include "vec.hpp"
+#include "test_tool.hh"
+#include "smath.hh"
+#include "vec.hh"
 
 using namespace smath;
 TEST(LENGTH) {

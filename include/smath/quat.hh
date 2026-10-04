@@ -8,7 +8,6 @@
 #include <ostream>
 #include <stdexcept>
 #include <string>
-#include <concepts>
 
 namespace smath {
   template <typename T>

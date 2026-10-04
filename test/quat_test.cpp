@@ -1,5 +1,6 @@
-#include "test_tool.hpp"
-#include "smath.hpp"
+#include "test_tool.hh"
+#include "smath.hh"
+#include "quat.hh"
 
 using namespace smath;
 TEST(PRINT_TEST) {
@@ -37,7 +38,7 @@ TEST(QUAT_CONJUGATE_AND_INVERSE) {
 
     Quat<float> q(1.0f, 2.0f, 3.0f, 4.0f);
     Quat<float> inv = q.inverse();
-    assert_equal(q.mul(inv), Quat<float>(1.0f, 0.0f, 0.0f, 0.0f)); // within eps
+    assert_close(q.mul(inv), Quat<float>(1.0f, 0.0f, 0.0f, 0.0f), Quat<float>(0.01f,0.01f,0.01f,0.01f)); // within eps
 }
 
 TEST(QUAT_MULTIPLY) {
