@@ -10,5 +10,7 @@ set(CMAKE_CXX_STANDARD_REQURIED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Header only Library
+# Create a target for the library.
 add_library(smath INTERFACE)
+# Do not use include_directories() as only need to bind the directory to smath target.
 target_include_directories(smath INTERFACE .)
